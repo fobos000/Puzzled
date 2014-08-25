@@ -1,0 +1,36 @@
+//
+//  PZPuzzleContainer.h
+//  Puzzled
+//
+//  Created by Ostap Horbach on 8/23/14.
+//  Copyright (c) 2014 Ostap Horbach. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+typedef struct {
+    int numberOfRows;
+    int numberOfColumns;
+} PuzzleSize;
+
+@class PZPuzzleContainer;
+
+@protocol PZPuzzleContainerDataSorce <NSObject>
+
+- (PuzzleSize)sizeForPuzzleContainer:(PZPuzzleContainer *)puzzleContainer;
+- (UIImage *)imageForCellAtIndexPath:(NSIndexPath *)index;
+
+@end
+
+@protocol PZPuzzleContainerDelegate <NSObject>
+
+
+
+@end
+
+@interface PZPuzzleContainer : UIView
+
+@property (nonatomic, weak) id<PZPuzzleContainerDataSorce> dataSource;
+@property (nonatomic, weak) id<PZPuzzleContainerDelegate> delegate;
+
+@end
