@@ -7,6 +7,13 @@
 //
 
 #import "PZPuzzleCell.h"
+#import <QuartzCore/QuartzCore.h>
+
+@interface PZPuzzleCell ()
+
+@property (nonatomic, strong) UIImageView *imageView;
+
+@end
 
 @implementation PZPuzzleCell
 
@@ -14,18 +21,30 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code
+        self.backgroundColor = [UIColor yellowColor];
+        _imageView = [[UIImageView alloc] init];
+        [self addSubview:_imageView];
+        self.layer.borderWidth = 1.0;
+        self.layer.borderColor = [UIColor blackColor].CGColor;
     }
     return self;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
+- (void)setFrame:(CGRect)frame
 {
-    // Drawing code
+    [super setFrame:frame];
+    
+    _imageView.frame = frame;
 }
-*/
+
+- (void)setImage:(UIImage *)image
+{
+    _imageView.image = image;
+}
+
+//- (void)drawRect:(CGRect)rect
+//{
+//    
+//}
 
 @end

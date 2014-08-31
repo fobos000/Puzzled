@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7F25C56E19B31C5200AF6565 /* PZPuzzleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F25C56D19B31C5200AF6565 /* PZPuzzleViewController.m */; };
+		7F25C57019B39FFE00AF6565 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F25C56F19B39FFE00AF6565 /* QuartzCore.framework */; };
 		7F2DA85219AB8C6A00362828 /* NSIndexPath+RowColumn.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F2DA85119AB8C6A00362828 /* NSIndexPath+RowColumn.m */; };
 		7F96273B19A8A2EA002DBA98 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F96273A19A8A2EA002DBA98 /* Storyboard.storyboard */; };
 		7F96273E19A8A374002DBA98 /* PZPuzzleContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F96273D19A8A374002DBA98 /* PZPuzzleContainer.m */; };
@@ -36,6 +38,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7F25C56C19B31C5200AF6565 /* PZPuzzleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PZPuzzleViewController.h; sourceTree = "<group>"; };
+		7F25C56D19B31C5200AF6565 /* PZPuzzleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PZPuzzleViewController.m; sourceTree = "<group>"; };
+		7F25C56F19B39FFE00AF6565 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		7F2DA85019AB8C6A00362828 /* NSIndexPath+RowColumn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSIndexPath+RowColumn.h"; sourceTree = "<group>"; };
 		7F2DA85119AB8C6A00362828 /* NSIndexPath+RowColumn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSIndexPath+RowColumn.m"; sourceTree = "<group>"; };
 		7F96273A19A8A2EA002DBA98 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
@@ -66,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F25C57019B39FFE00AF6565 /* QuartzCore.framework in Frameworks */,
 				F63ACEE21918DE8F0046BAF9 /* CoreGraphics.framework in Frameworks */,
 				F63ACEE41918DE8F0046BAF9 /* UIKit.framework in Frameworks */,
 				F63ACEE01918DE8F0046BAF9 /* Foundation.framework in Frameworks */,
@@ -107,6 +113,7 @@
 		F63ACEDE1918DE8F0046BAF9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7F25C56F19B39FFE00AF6565 /* QuartzCore.framework */,
 				F63ACEDF1918DE8F0046BAF9 /* Foundation.framework */,
 				F63ACEE11918DE8F0046BAF9 /* CoreGraphics.framework */,
 				F63ACEE31918DE8F0046BAF9 /* UIKit.framework */,
@@ -129,6 +136,8 @@
 				7F96274019A908EB002DBA98 /* PZPuzzleCell.m */,
 				7F2DA85019AB8C6A00362828 /* NSIndexPath+RowColumn.h */,
 				7F2DA85119AB8C6A00362828 /* NSIndexPath+RowColumn.m */,
+				7F25C56C19B31C5200AF6565 /* PZPuzzleViewController.h */,
+				7F25C56D19B31C5200AF6565 /* PZPuzzleViewController.m */,
 			);
 			path = Puzzled;
 			sourceTree = "<group>";
@@ -261,6 +270,7 @@
 			files = (
 				7F96273E19A8A374002DBA98 /* PZPuzzleContainer.m in Sources */,
 				7F96274119A908EB002DBA98 /* PZPuzzleCell.m in Sources */,
+				7F25C56E19B31C5200AF6565 /* PZPuzzleViewController.m in Sources */,
 				7F2DA85219AB8C6A00362828 /* NSIndexPath+RowColumn.m in Sources */,
 				F63ACEF01918DE8F0046BAF9 /* PZAppDelegate.m in Sources */,
 				F63ACEEC1918DE8F0046BAF9 /* main.m in Sources */,

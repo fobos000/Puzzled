@@ -10,7 +10,7 @@
 
 @interface NSIndexPath (RowColumn)
 
-+ (id)indexPathWithRow:(NSInteger)row column:(NSInteger)column;
++ (instancetype)indexPathWithRow:(NSInteger)row column:(NSInteger)column;
 
 @property (nonatomic, readonly) NSInteger column;
 

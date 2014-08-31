@@ -10,7 +10,7 @@
 
 @implementation NSIndexPath (RowColumn)
 
-+ (instancetype)initWithRow:(NSInteger)row column:(NSInteger)column
++ (instancetype)indexPathWithRow:(NSInteger)row column:(NSInteger)column
 {
     NSIndexPath *path = [NSIndexPath indexPathForRow:row inSection:column];
     return path;

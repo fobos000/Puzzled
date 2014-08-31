@@ -1,9 +1,44 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5023" systemVersion="13A603" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="u6o-OY-O2a">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
-    <scenes/>
+    <scenes>
+        <!--Puzzle View Controller-->
+        <scene sceneID="fZG-Yi-LMN">
+            <objects>
+                <viewController id="u6o-OY-O2a" customClass="PZPuzzleViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="UFV-SO-cOh"/>
+                        <viewControllerLayoutGuide type="bottom" id="SIn-CH-Twu"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="dWb-sJ-ZSF">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zPb-zm-n2R" customClass="PZPuzzleContainer">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="zPb-zm-n2R" secondAttribute="trailing" id="FAT-Dp-JOf"/>
+                            <constraint firstItem="zPb-zm-n2R" firstAttribute="leading" secondItem="dWb-sJ-ZSF" secondAttribute="leading" id="TsH-lp-aop"/>
+                            <constraint firstItem="SIn-CH-Twu" firstAttribute="top" secondItem="zPb-zm-n2R" secondAttribute="bottom" id="Vll-Lp-oDE"/>
+                            <constraint firstItem="zPb-zm-n2R" firstAttribute="top" secondItem="dWb-sJ-ZSF" secondAttribute="top" id="rCq-xw-wrP"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="puzzleContainer" destination="zPb-zm-n2R" id="Rm4-Rp-SFe"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tvc-XG-czS" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="370" y="90"/>
+        </scene>
+    </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

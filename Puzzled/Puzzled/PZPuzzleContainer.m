@@ -13,6 +13,7 @@
 @interface PZPuzzleContainer ()
 
 @property (nonatomic) PuzzleSize puzzleSize;
+@property (nonatomic) CGSize cellSize;
 @property (nonatomic, strong) NSMutableArray * cells;
 
 @end
@@ -27,11 +28,10 @@
         return;
     }
     
-    PuzzleSize size = [self.dataSource sizeForPuzzleContainer:self];
+    _puzzleSize = [self.dataSource sizeForPuzzleContainer:self];
     
-    int numOfCells = size.numberOfColumns * size.numberOfRows;
-    for (int cellRow = 0; cellRow < numOfCells; cellRow++) {
-        for (int cellColumn = 0; cellColumn < numOfCells; cellColumn++) {
+    for (int cellRow = 0; cellRow < _puzzleSize.numberOfRows; cellRow++) {
+        for (int cellColumn = 0; cellColumn < _puzzleSize.numberOfColumns; cellColumn++) {
             if (!_cells) {
                 _cells = [@[] mutableCopy];
             }
@@ -50,31 +50,34 @@
 {
     [super layoutSubviews];
     
-    PuzzleSize size = [self.dataSource sizeForPuzzleContainer:self];
-    
-    for (int cellRow = 0; cellRow < size.numberOfRows; cellRow++) {
-        for (int cellColumn = 0; cellColumn < size.numberOfColumns; cellColumn++) {
+    int cellIndex = 0;
+    for (int cellRow = 0; cellRow < _puzzleSize.numberOfRows; cellRow++) {
+        for (int cellColumn = 0; cellColumn < _puzzleSize.numberOfColumns; cellColumn++) {
             NSIndexPath *cellPath = [NSIndexPath indexPathWithRow:cellRow column:cellColumn];
             CGPoint origin = [self originForCellAtIndexPath:cellPath];
             CGSize size = [self cellSize];
-            PZPuzzleCell *cellAtIndex = [self cellAtIndexPath:[NSIndexPath indexPathWithRow:cellRow column:cellColumn]];
+            PZPuzzleCell *cellAtIndex = _cells[cellIndex];
             cellAtIndex.frame = CGRectMake(origin.x, origin.y, size.width, size.height);
+            cellIndex++;
         }
     }
 }
 
 - (PZPuzzleCell *)cellAtIndexPath:(NSIndexPath *)path
 {
-    return nil;
+    return _cells[path.row + path.column];
 }
 
 
 - (CGSize)cellSize
 {
-    CGFloat cellWidth = self.frame.size.width / self.puzzleSize.numberOfColumns;
-    CGFloat cellHeight = self.frame.size.height / self.puzzleSize.numberOfRows;
+    if (CGSizeEqualToSize(_cellSize, CGSizeZero)) {
+        CGFloat cellWidth = self.frame.size.width / self.puzzleSize.numberOfColumns;
+        CGFloat cellHeight = self.frame.size.height / self.puzzleSize.numberOfRows;
+        _cellSize = CGSizeMake(cellWidth, cellHeight);
+    }
     
-    return CGSizeMake(cellWidth, cellHeight);
+    return _cellSize;
 }
 
 - (CGPoint)originForCellAtIndexPath:(NSIndexPath *)path
@@ -84,8 +87,5 @@
     
     return CGPointMake(cellX, cellY);
 }
-
-
-
 
 @end
