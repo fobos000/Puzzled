@@ -87,13 +87,42 @@
     return CGPointMake(cellX, cellY);
 }
 
+- (CGRect)frameForCellAtIndexPath:(NSIndexPath *)path
+{
+    CGPoint origin = [self originForCellAtIndexPath:path];
+    CGSize size = [self cellSize];
+    
+    return CGRectMake(origin.x, origin.y, size.width, size.height);
+}
+
+- (NSIndexPath *)indexPathAtPoint:(CGPoint)point
+{
+    NSIndexPath *indexPathAtPoint = nil;
+    
+    for (int column = 0; column < _puzzleSize.numberOfColumns; column++) {
+        for (int row = 0; row < _puzzleSize.numberOfRows; row++) {
+            NSIndexPath *path = [NSIndexPath indexPathWithRow:row column:column];
+            CGRect rectAtIndexPath = [self frameForCellAtIndexPath:path];
+            if (CGRectContainsPoint(rectAtIndexPath, point)) {
+                indexPathAtPoint = path;
+            }
+        }
+    }
+    
+    return indexPathAtPoint;
+}
+
+- (PZPuzzleCell *)puzzleCellAtIndexPath:(NSIndexPath *)path
+{
+#warning
+    return nil;
+}
+
 - (PZPuzzleCell *)puzzleCellAtPoint:(CGPoint)point
 {
     PZPuzzleCell *cell = nil;
     
-    for (PZPuzzleCell *cell in self.cells) {
-        
-    }
+    NSIndexPath *path = [self indexPathAtPoint:point];
     
     return cell;
 }
