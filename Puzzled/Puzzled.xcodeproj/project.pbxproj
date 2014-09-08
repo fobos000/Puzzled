@@ -13,6 +13,8 @@
 		7F96273B19A8A2EA002DBA98 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F96273A19A8A2EA002DBA98 /* Storyboard.storyboard */; };
 		7F96273E19A8A374002DBA98 /* PZPuzzleContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F96273D19A8A374002DBA98 /* PZPuzzleContainer.m */; };
 		7F96274119A908EB002DBA98 /* PZPuzzleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F96274019A908EB002DBA98 /* PZPuzzleCell.m */; };
+		7FFE368119BA529C00FBFB37 /* PZImageSlicer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FFE368019BA529C00FBFB37 /* PZImageSlicer.m */; };
+		7FFE368519BA5E7700FBFB37 /* PZMatrix.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FFE368419BA5E7700FBFB37 /* PZMatrix.m */; };
 		F63ACEE01918DE8F0046BAF9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F63ACEDF1918DE8F0046BAF9 /* Foundation.framework */; };
 		F63ACEE21918DE8F0046BAF9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F63ACEE11918DE8F0046BAF9 /* CoreGraphics.framework */; };
 		F63ACEE41918DE8F0046BAF9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F63ACEE31918DE8F0046BAF9 /* UIKit.framework */; };
@@ -48,6 +50,11 @@
 		7F96273D19A8A374002DBA98 /* PZPuzzleContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PZPuzzleContainer.m; sourceTree = "<group>"; };
 		7F96273F19A908EB002DBA98 /* PZPuzzleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PZPuzzleCell.h; sourceTree = "<group>"; };
 		7F96274019A908EB002DBA98 /* PZPuzzleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PZPuzzleCell.m; sourceTree = "<group>"; };
+		7FFE367F19BA529C00FBFB37 /* PZImageSlicer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PZImageSlicer.h; sourceTree = "<group>"; };
+		7FFE368019BA529C00FBFB37 /* PZImageSlicer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PZImageSlicer.m; sourceTree = "<group>"; };
+		7FFE368219BA532600FBFB37 /* PZPuzzleSize.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PZPuzzleSize.h; sourceTree = "<group>"; };
+		7FFE368319BA5E7700FBFB37 /* PZMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PZMatrix.h; sourceTree = "<group>"; };
+		7FFE368419BA5E7700FBFB37 /* PZMatrix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PZMatrix.m; sourceTree = "<group>"; };
 		F63ACEDC1918DE8F0046BAF9 /* Puzzled.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Puzzled.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F63ACEDF1918DE8F0046BAF9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		F63ACEE11918DE8F0046BAF9 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -138,6 +145,11 @@
 				7F2DA85119AB8C6A00362828 /* NSIndexPath+RowColumn.m */,
 				7F25C56C19B31C5200AF6565 /* PZPuzzleViewController.h */,
 				7F25C56D19B31C5200AF6565 /* PZPuzzleViewController.m */,
+				7FFE367F19BA529C00FBFB37 /* PZImageSlicer.h */,
+				7FFE368019BA529C00FBFB37 /* PZImageSlicer.m */,
+				7FFE368219BA532600FBFB37 /* PZPuzzleSize.h */,
+				7FFE368319BA5E7700FBFB37 /* PZMatrix.h */,
+				7FFE368419BA5E7700FBFB37 /* PZMatrix.m */,
 			);
 			path = Puzzled;
 			sourceTree = "<group>";
@@ -269,8 +281,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				7F96273E19A8A374002DBA98 /* PZPuzzleContainer.m in Sources */,
+				7FFE368119BA529C00FBFB37 /* PZImageSlicer.m in Sources */,
 				7F96274119A908EB002DBA98 /* PZPuzzleCell.m in Sources */,
 				7F25C56E19B31C5200AF6565 /* PZPuzzleViewController.m in Sources */,
+				7FFE368519BA5E7700FBFB37 /* PZMatrix.m in Sources */,
 				7F2DA85219AB8C6A00362828 /* NSIndexPath+RowColumn.m in Sources */,
 				F63ACEF01918DE8F0046BAF9 /* PZAppDelegate.m in Sources */,
 				F63ACEEC1918DE8F0046BAF9 /* main.m in Sources */,

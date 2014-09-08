@@ -7,11 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
-typedef struct {
-    int numberOfRows;
-    int numberOfColumns;
-} PuzzleSize;
+#import "PZPuzzleSize.h"
 
 @class PZPuzzleContainer;
 

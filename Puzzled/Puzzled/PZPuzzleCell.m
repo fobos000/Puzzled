@@ -34,7 +34,7 @@
 {
     [super setFrame:frame];
     
-    _imageView.frame = frame;
+    _imageView.frame = CGRectMake(0, 0, CGRectGetWidth(frame), CGRectGetHeight(frame));
 }
 
 - (void)setImage:(UIImage *)image

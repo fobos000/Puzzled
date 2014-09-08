@@ -68,7 +68,6 @@
     return _cells[path.row + path.column];
 }
 
-
 - (CGSize)cellSize
 {
     if (CGSizeEqualToSize(_cellSize, CGSizeZero)) {
@@ -86,6 +85,38 @@
     CGFloat cellY = path.row * [self cellSize].height;
     
     return CGPointMake(cellX, cellY);
+}
+
+- (PZPuzzleCell *)puzzleCellAtPoint:(CGPoint)point
+{
+    PZPuzzleCell *cell = nil;
+    
+    for (PZPuzzleCell *cell in self.cells) {
+        
+    }
+    
+    return cell;
+}
+
+#pragma mark - 
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    UITouch *touch = event.allTouches.anyObject;
+    CGPoint touchLocation = [touch locationInView:self];
+    PZPuzzleCell *puzzleCell = [self puzzleCellAtPoint:touchLocation];
+    
+    NSLog(@"!");
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    
 }
 
 @end

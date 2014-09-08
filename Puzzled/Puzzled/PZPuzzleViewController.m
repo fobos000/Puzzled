@@ -8,9 +8,14 @@
 
 #import "PZPuzzleViewController.h"
 #import "PZPuzzleContainer.h"
+#import "PZImageSlicer.h"
+#import "PZMatrix.h"
 
 @interface PZPuzzleViewController () <PZPuzzleContainerDataSorce, PZPuzzleContainerDelegate>
 @property (weak, nonatomic) IBOutlet PZPuzzleContainer *puzzleContainer;
+
+@property (nonatomic, strong) PZMatrix *slicedImages;
+@property (nonatomic) PuzzleSize puzzleSize;
 
 @end
 
@@ -30,6 +35,10 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    PuzzleSize size = {3, 3};
+    self.puzzleSize = size;
+    self.slicedImages = [PZImageSlicer slicedImagesWithImage:[UIImage imageNamed:@"half-life"] size:self.puzzleSize];
+    
     self.puzzleContainer.dataSource = self;
     self.puzzleContainer.delegate = self;
 }
@@ -44,13 +53,12 @@
 
 - (PuzzleSize)sizeForPuzzleContainer:(PZPuzzleContainer *)puzzleContainer
 {
-    PuzzleSize size = {3, 3};
-    return size;
+    return self.puzzleSize;
 }
 
-- (UIImage *)imageForCellAtIndexPath:(NSIndexPath *)index
+- (UIImage *)imageForCellAtIndexPath:(NSIndexPath *)path
 {
-    return [UIImage imageNamed:@"half-life"];
+    return [self.slicedImages objectAtIndexPath:path];
 }
 
 
