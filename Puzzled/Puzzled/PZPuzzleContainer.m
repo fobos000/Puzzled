@@ -9,12 +9,17 @@
 #import "PZPuzzleContainer.h"
 #import "PZPuzzleCell.h"
 #import "NSIndexPath+RowColumn.h"
+#import "PZMatrix.h"
 
 @interface PZPuzzleContainer ()
 
 @property (nonatomic) PuzzleSize puzzleSize;
 @property (nonatomic) CGSize cellSize;
-@property (nonatomic, strong) NSMutableArray * cells;
+@property (nonatomic, strong) PZMatrix *puzzleMatrix;
+@property (nonatomic) BOOL dragging;
+@property (nonatomic, strong) PZPuzzleCell *draggedCell;
+@property (nonatomic) CGFloat dX;
+@property (nonatomic) CGFloat dY;
 
 @end
 
@@ -30,20 +35,19 @@
     
     _puzzleSize = [self.dataSource sizeForPuzzleContainer:self];
     
+    NSMutableArray *cells = [@[] mutableCopy];
     for (int cellRow = 0; cellRow < _puzzleSize.numberOfRows; cellRow++) {
         for (int cellColumn = 0; cellColumn < _puzzleSize.numberOfColumns; cellColumn++) {
-            if (!_cells) {
-                _cells = [@[] mutableCopy];
-            }
-            
             NSIndexPath *path = [NSIndexPath indexPathWithRow:cellRow column:cellColumn];
             UIImage *image = [self.dataSource imageForCellAtIndexPath:path];
             PZPuzzleCell *cellForIndex = [[PZPuzzleCell alloc] init];
             cellForIndex.image = image;
-            [_cells addObject:cellForIndex];
+            [cells addObject:cellForIndex];
             [self addSubview:cellForIndex];
         }
     }
+    _puzzleMatrix = [[PZMatrix alloc] initWithSize:[self.dataSource sizeForPuzzleContainer:self]
+                                    objects:cells];
 }
 
 - (void)layoutSubviews
@@ -56,7 +60,7 @@
             NSIndexPath *cellPath = [NSIndexPath indexPathWithRow:cellRow column:cellColumn];
             CGPoint origin = [self originForCellAtIndexPath:cellPath];
             CGSize size = [self cellSize];
-            PZPuzzleCell *cellAtIndex = _cells[cellIndex];
+            PZPuzzleCell *cellAtIndex = [_puzzleMatrix objectAtIndexPath:cellPath];
             cellAtIndex.frame = CGRectMake(origin.x, origin.y, size.width, size.height);
             cellIndex++;
         }
@@ -65,7 +69,7 @@
 
 - (PZPuzzleCell *)cellAtIndexPath:(NSIndexPath *)path
 {
-    return _cells[path.row + path.column];
+    return [_puzzleMatrix objectAtIndexPath:path];
 }
 
 - (CGSize)cellSize
@@ -112,17 +116,12 @@
     return indexPathAtPoint;
 }
 
-- (PZPuzzleCell *)puzzleCellAtIndexPath:(NSIndexPath *)path
-{
-#warning
-    return nil;
-}
-
 - (PZPuzzleCell *)puzzleCellAtPoint:(CGPoint)point
 {
     PZPuzzleCell *cell = nil;
     
     NSIndexPath *path = [self indexPathAtPoint:point];
+    cell = [_puzzleMatrix objectAtIndexPath:path];
     
     return cell;
 }
@@ -133,19 +132,33 @@
 {
     UITouch *touch = event.allTouches.anyObject;
     CGPoint touchLocation = [touch locationInView:self];
-    PZPuzzleCell *puzzleCell = [self puzzleCellAtPoint:touchLocation];
     
-    NSLog(@"!");
+    if (CGRectContainsPoint(self.frame, touchLocation)) {
+        PZPuzzleCell *puzzleCell = [self puzzleCellAtPoint:touchLocation];
+        _draggedCell = puzzleCell;
+        _dragging = YES;
+        _dX = touchLocation.x - puzzleCell.frame.origin.x;
+        _dY = touchLocation.y - puzzleCell.frame.origin.y;
+    }
+    
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    UITouch *touch = [[event allTouches] anyObject];
+    CGPoint touchLocation = [touch locationInView:self];
     
+    if (_dragging) {
+        CGRect frame = _draggedCell.frame;
+        frame.origin.x = touchLocation.x - _dX;
+        frame.origin.y =  touchLocation.y - _dY;
+        _draggedCell.frame = frame;
+    }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    
+    _dragging = NO;
 }
 
 @end
