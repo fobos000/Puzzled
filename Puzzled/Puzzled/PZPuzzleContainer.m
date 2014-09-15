@@ -11,6 +11,36 @@
 #import "NSIndexPath+RowColumn.h"
 #import "PZMatrix.h"
 
+@interface PZPuzzleCellPlaceholder : NSObject
+
+@property (nonatomic, strong) PZPuzzleCell *cell;
+
+@property (nonatomic, strong) NSIndexPath *originalIndexPath;
+@property (nonatomic, strong) NSIndexPath *currentIndexPath;
+@property (nonatomic) BOOL empty;
+
+@end
+
+@implementation PZPuzzleCellPlaceholder
+
+- (void)setEmpty:(BOOL)empty
+{
+    if (empty) {
+        self.cell.alpha = 0.0f;
+    } else {
+        self.cell.alpha = 1.0f;
+    }
+    _empty = empty;
+}
+
+@end
+
+typedef enum : NSUInteger {
+    UndefinedMoveDirection,
+    XMoveDirection,
+    YMoveDirection
+} MoveDirection;
+
 @interface PZPuzzleContainer ()
 
 @property (nonatomic) PuzzleSize puzzleSize;
@@ -20,6 +50,8 @@
 @property (nonatomic, strong) PZPuzzleCell *draggedCell;
 @property (nonatomic) CGFloat dX;
 @property (nonatomic) CGFloat dY;
+@property (nonatomic) CGPoint initialTouch;
+@property (nonatomic) MoveDirection moveDirection;
 
 @end
 
@@ -39,15 +71,26 @@
     for (int cellRow = 0; cellRow < _puzzleSize.numberOfRows; cellRow++) {
         for (int cellColumn = 0; cellColumn < _puzzleSize.numberOfColumns; cellColumn++) {
             NSIndexPath *path = [NSIndexPath indexPathWithRow:cellRow column:cellColumn];
+            
             UIImage *image = [self.dataSource imageForCellAtIndexPath:path];
             PZPuzzleCell *cellForIndex = [[PZPuzzleCell alloc] init];
             cellForIndex.image = image;
-            [cells addObject:cellForIndex];
+            
+            PZPuzzleCellPlaceholder *placeholder = [[PZPuzzleCellPlaceholder alloc] init];
+            placeholder.originalIndexPath = path;
+            placeholder.currentIndexPath = path;
+            placeholder.cell = cellForIndex;
+            
+            [cells addObject:placeholder];
             [self addSubview:cellForIndex];
         }
     }
     _puzzleMatrix = [[PZMatrix alloc] initWithSize:[self.dataSource sizeForPuzzleContainer:self]
                                     objects:cells];
+    
+    NSIndexPath *emptyCellIndexPath = [self.dataSource indexOfEmptyPuzzleForPuzzleContainer:self];
+    PZPuzzleCellPlaceholder *placeholder = [_puzzleMatrix objectAtIndexPath:emptyCellIndexPath];
+    placeholder.empty = YES;
 }
 
 - (void)layoutSubviews
@@ -60,7 +103,8 @@
             NSIndexPath *cellPath = [NSIndexPath indexPathWithRow:cellRow column:cellColumn];
             CGPoint origin = [self originForCellAtIndexPath:cellPath];
             CGSize size = [self cellSize];
-            PZPuzzleCell *cellAtIndex = [_puzzleMatrix objectAtIndexPath:cellPath];
+            PZPuzzleCellPlaceholder *placeholder = [_puzzleMatrix objectAtIndexPath:cellPath];
+            PZPuzzleCell *cellAtIndex = placeholder.cell;
             cellAtIndex.frame = CGRectMake(origin.x, origin.y, size.width, size.height);
             cellIndex++;
         }
@@ -69,7 +113,8 @@
 
 - (PZPuzzleCell *)cellAtIndexPath:(NSIndexPath *)path
 {
-    return [_puzzleMatrix objectAtIndexPath:path];
+    PZPuzzleCellPlaceholder *placeholder = [_puzzleMatrix objectAtIndexPath:path];
+    return placeholder.cell;
 }
 
 - (CGSize)cellSize
@@ -121,7 +166,8 @@
     PZPuzzleCell *cell = nil;
     
     NSIndexPath *path = [self indexPathAtPoint:point];
-    cell = [_puzzleMatrix objectAtIndexPath:path];
+    PZPuzzleCellPlaceholder *placeholder = [_puzzleMatrix objectAtIndexPath:path];
+    cell = placeholder.cell;
     
     return cell;
 }
@@ -139,6 +185,7 @@
         _dragging = YES;
         _dX = touchLocation.x - puzzleCell.frame.origin.x;
         _dY = touchLocation.y - puzzleCell.frame.origin.y;
+        _initialTouch = touchLocation;
     }
     
 }
@@ -149,9 +196,22 @@
     CGPoint touchLocation = [touch locationInView:self];
     
     if (_dragging) {
+        if (_moveDirection == UndefinedMoveDirection) {
+            CGFloat deltaX = fabsf(_initialTouch.x - touchLocation.x);
+            CGFloat deltaY = fabsf(_initialTouch.y - touchLocation.y);
+            if (deltaX > deltaY) {
+                _moveDirection = XMoveDirection;
+            } else {
+                _moveDirection = YMoveDirection;
+            }
+        }
+        
         CGRect frame = _draggedCell.frame;
-        frame.origin.x = touchLocation.x - _dX;
-        frame.origin.y =  touchLocation.y - _dY;
+        if (_moveDirection == XMoveDirection) {
+            frame.origin.x = touchLocation.x - _dX;
+        } else if (_moveDirection == YMoveDirection) {
+            frame.origin.y =  touchLocation.y - _dY;
+        }
         _draggedCell.frame = frame;
     }
 }
@@ -159,6 +219,7 @@
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     _dragging = NO;
+    _moveDirection = UndefinedMoveDirection;
 }
 
 @end

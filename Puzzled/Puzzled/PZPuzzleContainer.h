@@ -15,12 +15,11 @@
 
 - (PuzzleSize)sizeForPuzzleContainer:(PZPuzzleContainer *)puzzleContainer;
 - (UIImage *)imageForCellAtIndexPath:(NSIndexPath *)index;
+- (NSIndexPath *)indexOfEmptyPuzzleForPuzzleContainer:(PZPuzzleContainer *)puzzleContainer;
 
 @end
 
 @protocol PZPuzzleContainerDelegate <NSObject>
-
-
 
 @end
 

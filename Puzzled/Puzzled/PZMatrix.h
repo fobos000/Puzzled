@@ -11,6 +11,8 @@
 
 @interface PZMatrix : NSObject
 
+@property (nonatomic, readonly) PuzzleSize size;
+
 - (id)initWithSize:(PuzzleSize)size objects:(NSArray *)objects;
 - (id)objectAtIndexPath:(NSIndexPath *)path;
 

@@ -24,6 +24,7 @@
     
     self = [super init];
     if (self) {
+        _size = size;
         _cells = [NSMutableArray arrayWithCapacity:size.numberOfRows];
         int objectIndex = 0;
         for (int column = 0; column < size.numberOfColumns; column++) {

@@ -10,6 +10,7 @@
 #import "PZPuzzleContainer.h"
 #import "PZImageSlicer.h"
 #import "PZMatrix.h"
+#import "NSIndexPath+RowColumn.h"
 
 @interface PZPuzzleViewController () <PZPuzzleContainerDataSorce, PZPuzzleContainerDelegate>
 @property (weak, nonatomic) IBOutlet PZPuzzleContainer *puzzleContainer;
@@ -61,5 +62,9 @@
     return [self.slicedImages objectAtIndexPath:path];
 }
 
+- (NSIndexPath *)indexOfEmptyPuzzleForPuzzleContainer:(PZPuzzleContainer *)puzzleContainer
+{
+    return [NSIndexPath indexPathWithRow:_puzzleSize.numberOfRows - 1 column:_puzzleSize.numberOfColumns - 1];
+}
 
 @end
