@@ -210,7 +210,7 @@ typedef enum : NSUInteger {
         if (_moveDirection == XMoveDirection) {
             frame.origin.x = touchLocation.x - _dX;
         } else if (_moveDirection == YMoveDirection) {
-            frame.origin.y =  touchLocation.y - _dY;
+            frame.origin.y = touchLocation.y - _dY;
         }
         _draggedCell.frame = frame;
     }
@@ -220,6 +220,13 @@ typedef enum : NSUInteger {
 {
     _dragging = NO;
     _moveDirection = UndefinedMoveDirection;
+    
+    CGPoint cellLocation = _draggedCell.center;
+    
+    NSIndexPath *initialIndexPath = [self indexPathAtPoint:_initialTouch];
+    NSIndexPath *indexPath = [self indexPathAtPoint:cellLocation];
+    [_puzzleMatrix swipeObjectAtIndexPath:indexPath withObjectAtIndexPath:initialIndexPath];
+    [self setNeedsLayout];
 }
 
 @end
