@@ -16,5 +16,6 @@
 - (id)initWithSize:(PuzzleSize)size objects:(NSArray *)objects;
 - (id)objectAtIndexPath:(NSIndexPath *)path;
 - (void)swipeObjectAtIndexPath:(NSIndexPath *)path1 withObjectAtIndexPath:(NSIndexPath *)path2;
+- (NSIndexPath *)indexPathOfObject:(id)object;
 
 @end

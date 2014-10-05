@@ -55,14 +55,27 @@
 
 - (void)swipeObjectAtIndexPath:(NSIndexPath *)path1 withObjectAtIndexPath:(NSIndexPath *)path2
 {
-    NSLog(@"%@", self);
+//    NSLog(@"%@", self);
     
     id object1 = [self objectAtIndexPath:path1];
     id object2 = [self objectAtIndexPath:path2];
     [self replaceObjectAtIndexPath:path1 withObject:object2];
     [self replaceObjectAtIndexPath:path2 withObject:object1];
     
-    NSLog(@"%@", self);
+//    NSLog(@"%@", self);
+}
+
+- (NSIndexPath *)indexPathOfObject:(id)object
+{
+    NSIndexPath *indexPathOfObject = nil;
+    for (int row = 0; row < _size.numberOfRows; row++) {
+        NSInteger column = [_cells[row] indexOfObject:object];
+        if (column != NSNotFound) {
+            indexPathOfObject = [NSIndexPath indexPathWithRow:row column:column];
+            break;
+        }
+    }
+    return indexPathOfObject;
 }
 
 - (NSString *)description
