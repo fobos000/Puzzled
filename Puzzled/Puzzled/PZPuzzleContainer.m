@@ -193,10 +193,47 @@ typedef enum : NSUInteger {
         _initialTouch = touchLocation;
         _indexPathOfDraggedCell = [self indexPathAtPoint:touchLocation];
         
-        if (CGRectIntersectsRect(_draggedCell.frame, _emptyCell.frame)) {
+        if ([self draggedCellCanSlide]) {
             _movementRect = CGRectUnion(_draggedCell.frame, _emptyCell.frame);
         }
     }
+}
+
+- (BOOL)isEmptyCellAtIndexPath:(NSIndexPath *)path
+{
+    PZPuzzleCellPlaceholder *placeholder = [_puzzleMatrix objectAtIndexPath:path];
+    return placeholder.empty;
+}
+
+- (BOOL)draggedCellCanSlide
+{
+    NSIndexPath *ip = _indexPathOfDraggedCell;
+    
+    if (_indexPathOfDraggedCell.row > 0) {
+        NSIndexPath *path = [NSIndexPath indexPathWithRow:ip.row - 1 column:ip.column];
+        if ([self isEmptyCellAtIndexPath:path]) {
+            return YES;
+        }
+    }
+    if (_indexPathOfDraggedCell.row < _puzzleMatrix.size.numberOfRows - 1) {
+        NSIndexPath *path = [NSIndexPath indexPathWithRow:ip.row + 1 column:ip.column];
+        if ([self isEmptyCellAtIndexPath:path]) {
+            return YES;
+        }
+    }
+    if (_indexPathOfDraggedCell.column > 0) {
+        NSIndexPath *path = [NSIndexPath indexPathWithRow:ip.row column:ip.column - 1];
+        if ([self isEmptyCellAtIndexPath:path]) {
+            return YES;
+        }
+    }
+    if (_indexPathOfDraggedCell.column < _puzzleMatrix.size.numberOfColumns - 1) {
+        NSIndexPath *path = [NSIndexPath indexPathWithRow:ip.row column:ip.column + 1];
+        if ([self isEmptyCellAtIndexPath:path]) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 - (BOOL)canSlideToDirection:(MoveDirection)direction
