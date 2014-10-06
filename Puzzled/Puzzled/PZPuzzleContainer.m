@@ -192,7 +192,10 @@ typedef enum : NSUInteger {
         _dY = touchLocation.y - puzzleCell.frame.origin.y;
         _initialTouch = touchLocation;
         _indexPathOfDraggedCell = [self indexPathAtPoint:touchLocation];
-        _movementRect = CGRectUnion(_draggedCell.frame, _emptyCell.frame);
+        
+        if (CGRectIntersectsRect(_draggedCell.frame, _emptyCell.frame)) {
+            _movementRect = CGRectUnion(_draggedCell.frame, _emptyCell.frame);
+        }
     }
 }
 
@@ -259,35 +262,43 @@ typedef enum : NSUInteger {
     CGPoint touchLocation = [touch locationInView:self];
     
     if (_dragging) {
-        CGRect newFrame = _draggedCell.frame;
-        newFrame.origin.x = touchLocation.x - _dX;
-        newFrame.origin.y = touchLocation.y - _dY;
-        
-        if (CGRectGetMinX(newFrame) < CGRectGetMinX(_movementRect)) {
-            newFrame.origin.x = CGRectGetMinX(_movementRect);
-        } else if (CGRectGetMaxX(newFrame) > CGRectGetMaxX(_movementRect)) {
-            newFrame.origin.x = CGRectGetMaxX(_movementRect) - CGRectGetWidth(newFrame);
+        if (!CGRectEqualToRect(_movementRect, CGRectZero)) {
+            CGRect newFrame = _draggedCell.frame;
+            newFrame.origin.x = touchLocation.x - _dX;
+            newFrame.origin.y = touchLocation.y - _dY;
+            
+            if (CGRectGetMinX(newFrame) < CGRectGetMinX(_movementRect)) {
+                newFrame.origin.x = CGRectGetMinX(_movementRect);
+            } else if (CGRectGetMaxX(newFrame) > CGRectGetMaxX(_movementRect)) {
+                newFrame.origin.x = CGRectGetMaxX(_movementRect) - CGRectGetWidth(newFrame);
+            }
+            
+            if (CGRectGetMinY(newFrame) < CGRectGetMinY(_movementRect)) {
+                newFrame.origin.y = CGRectGetMinY(_movementRect);
+            } else if (CGRectGetMaxY(newFrame) > CGRectGetMaxY(_movementRect)) {
+                newFrame.origin.y = CGRectGetMaxY(_movementRect) - CGRectGetHeight(newFrame);
+            }
+            
+            _draggedCell.frame = newFrame;
         }
-        
-        if (CGRectGetMinY(newFrame) < CGRectGetMinY(_movementRect)) {
-            newFrame.origin.y = CGRectGetMinY(_movementRect);
-        } else if (CGRectGetMaxY(newFrame) > CGRectGetMaxY(_movementRect)) {
-            newFrame.origin.y = CGRectGetMaxY(_movementRect) - CGRectGetHeight(newFrame);
-        }
-        
-        _draggedCell.frame = newFrame;
     }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     _dragging = NO;
+    _movementRect = CGRectZero;
     
     CGPoint cellLocation = _draggedCell.center;
     
     NSIndexPath *initialIndexPath = [self indexPathAtPoint:_initialTouch];
     NSIndexPath *indexPath = [self indexPathAtPoint:cellLocation];
-    [_puzzleMatrix swipeObjectAtIndexPath:indexPath withObjectAtIndexPath:initialIndexPath];
+    
+    if (![initialIndexPath isEqualToIndexPath:indexPath]) {
+        [_puzzleMatrix swipeObjectAtIndexPath:indexPath withObjectAtIndexPath:initialIndexPath];
+        
+    }
+    
     [self setNeedsLayout];
 }
 

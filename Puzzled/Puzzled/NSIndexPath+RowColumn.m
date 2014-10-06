@@ -21,4 +21,21 @@
     return self.section;
 }
 
+- (BOOL)isEqualToIndexPath:(NSIndexPath *)path
+{
+    if (self == path) {
+        return YES;
+    }
+    
+    if ([self isEqual:path]) {
+        return YES;
+    }
+    
+    if (self.row == path.row && self.column == path.column) {
+        return YES;
+    }
+    
+    return NO;
+}
+
 @end

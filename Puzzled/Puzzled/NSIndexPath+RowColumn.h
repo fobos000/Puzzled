@@ -10,8 +10,10 @@
 
 @interface NSIndexPath (RowColumn)
 
-+ (instancetype)indexPathWithRow:(NSInteger)row column:(NSInteger)column;
-
 @property (nonatomic, readonly) NSInteger column;
+
+- (BOOL)isEqualToIndexPath:(NSIndexPath *)path;
+
++ (instancetype)indexPathWithRow:(NSInteger)row column:(NSInteger)column;
 
 @end
