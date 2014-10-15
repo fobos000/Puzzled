@@ -13,6 +13,8 @@
 		7F96273B19A8A2EA002DBA98 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F96273A19A8A2EA002DBA98 /* Storyboard.storyboard */; };
 		7F96273E19A8A374002DBA98 /* PZPuzzleContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F96273D19A8A374002DBA98 /* PZPuzzleContainer.m */; };
 		7F96274119A908EB002DBA98 /* PZPuzzleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F96274019A908EB002DBA98 /* PZPuzzleCell.m */; };
+		7FB2449619E5C7C40074B9F4 /* PZImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FB2449519E5C7C40074B9F4 /* PZImagePickerViewController.m */; };
+		7FB2449919E5CDBC0074B9F4 /* NoStatusBarImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FB2449819E5CDBC0074B9F4 /* NoStatusBarImagePickerController.m */; };
 		7FFE368119BA529C00FBFB37 /* PZImageSlicer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FFE368019BA529C00FBFB37 /* PZImageSlicer.m */; };
 		7FFE368519BA5E7700FBFB37 /* PZMatrix.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FFE368419BA5E7700FBFB37 /* PZMatrix.m */; };
 		F63ACEE01918DE8F0046BAF9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F63ACEDF1918DE8F0046BAF9 /* Foundation.framework */; };
@@ -50,6 +52,10 @@
 		7F96273D19A8A374002DBA98 /* PZPuzzleContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PZPuzzleContainer.m; sourceTree = "<group>"; };
 		7F96273F19A908EB002DBA98 /* PZPuzzleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PZPuzzleCell.h; sourceTree = "<group>"; };
 		7F96274019A908EB002DBA98 /* PZPuzzleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PZPuzzleCell.m; sourceTree = "<group>"; };
+		7FB2449419E5C7C40074B9F4 /* PZImagePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PZImagePickerViewController.h; sourceTree = "<group>"; };
+		7FB2449519E5C7C40074B9F4 /* PZImagePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PZImagePickerViewController.m; sourceTree = "<group>"; };
+		7FB2449719E5CDBC0074B9F4 /* NoStatusBarImagePickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoStatusBarImagePickerController.h; sourceTree = "<group>"; };
+		7FB2449819E5CDBC0074B9F4 /* NoStatusBarImagePickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoStatusBarImagePickerController.m; sourceTree = "<group>"; };
 		7FFE367F19BA529C00FBFB37 /* PZImageSlicer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PZImageSlicer.h; sourceTree = "<group>"; };
 		7FFE368019BA529C00FBFB37 /* PZImageSlicer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PZImageSlicer.m; sourceTree = "<group>"; };
 		7FFE368219BA532600FBFB37 /* PZPuzzleSize.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PZPuzzleSize.h; sourceTree = "<group>"; };
@@ -150,6 +156,10 @@
 				7FFE368219BA532600FBFB37 /* PZPuzzleSize.h */,
 				7FFE368319BA5E7700FBFB37 /* PZMatrix.h */,
 				7FFE368419BA5E7700FBFB37 /* PZMatrix.m */,
+				7FB2449419E5C7C40074B9F4 /* PZImagePickerViewController.h */,
+				7FB2449519E5C7C40074B9F4 /* PZImagePickerViewController.m */,
+				7FB2449719E5CDBC0074B9F4 /* NoStatusBarImagePickerController.h */,
+				7FB2449819E5CDBC0074B9F4 /* NoStatusBarImagePickerController.m */,
 			);
 			path = Puzzled;
 			sourceTree = "<group>";
@@ -286,6 +296,8 @@
 				7F25C56E19B31C5200AF6565 /* PZPuzzleViewController.m in Sources */,
 				7FFE368519BA5E7700FBFB37 /* PZMatrix.m in Sources */,
 				7F2DA85219AB8C6A00362828 /* NSIndexPath+RowColumn.m in Sources */,
+				7FB2449919E5CDBC0074B9F4 /* NoStatusBarImagePickerController.m in Sources */,
+				7FB2449619E5C7C40074B9F4 /* PZImagePickerViewController.m in Sources */,
 				F63ACEF01918DE8F0046BAF9 /* PZAppDelegate.m in Sources */,
 				F63ACEEC1918DE8F0046BAF9 /* main.m in Sources */,
 			);

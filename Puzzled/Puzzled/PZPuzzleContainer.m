@@ -333,6 +333,8 @@ typedef enum : NSUInteger {
         NSIndexPath *targetPath = [self pathDraggedCellCanSlide];
         if (targetPath) {
             [self animateCell:_draggedCell toPath:targetPath];
+            PZPuzzleCellPlaceholder *placeholder = [_puzzleMatrix objectAtIndexPath:targetPath];
+            NSAssert(placeholder.empty, @"Placeholeder not empty");
             [_puzzleMatrix swipeObjectAtIndexPath:targetPath withObjectAtIndexPath:_indexPathOfDraggedCell];
         }
     } else {

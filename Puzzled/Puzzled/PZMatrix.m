@@ -27,9 +27,9 @@
         _size = size;
         _cells = [NSMutableArray arrayWithCapacity:size.numberOfRows];
         int objectIndex = 0;
-        for (int column = 0; column < size.numberOfColumns; column++) {
+        for (int column = 0; column < size.numberOfRows; column++) {
             [_cells addObject:[NSMutableArray arrayWithCapacity:size.numberOfColumns]];
-            for (int row = 0; row < size.numberOfRows; row++) {
+            for (int row = 0; row < size.numberOfColumns; row++) {
                 [_cells[column] addObject:objects[objectIndex]];
                 objectIndex++;
             }
@@ -41,7 +41,10 @@
 - (id)objectAtIndexPath:(NSIndexPath *)path
 {
     NSAssert(path.row < _cells.count, @"row index is too big");
-    NSAssert(path.column < _cells.count, @"column index is too big");
+    NSAssert(path.column < [_cells[path.row] count], @"column index is too big");
+    
+    NSLog(@"row: %d", path.row);
+    NSLog(@"column: %d", path.column);
     return _cells[path.row][path.column];
 }
 

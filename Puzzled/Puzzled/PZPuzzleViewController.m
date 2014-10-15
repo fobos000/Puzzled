@@ -7,16 +7,18 @@
 //
 
 #import "PZPuzzleViewController.h"
+#import "PZImagePickerViewController.h"
 #import "PZPuzzleContainer.h"
 #import "PZImageSlicer.h"
 #import "PZMatrix.h"
 #import "NSIndexPath+RowColumn.h"
 
-@interface PZPuzzleViewController () <PZPuzzleContainerDataSorce, PZPuzzleContainerDelegate>
+@interface PZPuzzleViewController () <PZPuzzleContainerDataSorce, PZPuzzleContainerDelegate, PZImagePickerDelegate>
 @property (weak, nonatomic) IBOutlet PZPuzzleContainer *puzzleContainer;
 
 @property (nonatomic, strong) PZMatrix *slicedImages;
 @property (nonatomic) PuzzleSize puzzleSize;
+@property (nonatomic) BOOL firstRun;
 
 @end
 
@@ -35,8 +37,9 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    _firstRun = YES;
     
-    PuzzleSize size = {3, 3};
+    PuzzleSize size = {6, 4};
     self.puzzleSize = size;
     self.slicedImages = [PZImageSlicer slicedImagesWithImage:[UIImage imageNamed:@"half-life"] size:self.puzzleSize];
     
@@ -44,10 +47,45 @@
     self.puzzleContainer.delegate = self;
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+//    if (_firstRun) {
+//        [self performSegueWithIdentifier:@"ImagePicker" sender:self];
+//        _firstRun = NO;
+//    }
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"ImagePicker"]) {
+        PZImagePickerViewController *picker = segue.destinationViewController;
+        picker.delegate = self;
+    }
+}
+
+#pragma mark - 
+
+- (void)imagePicker:(PZImagePickerViewController *)picker didPickImage:(UIImage *)image
+{
+    PuzzleSize size = {6, 4};
+    self.puzzleSize = size;
+    self.slicedImages = [PZImageSlicer slicedImagesWithImage:image size:self.puzzleSize];
+    
+    self.puzzleContainer.dataSource = self;
+    self.puzzleContainer.delegate = self;
+    
 }
 
 #pragma mark -
