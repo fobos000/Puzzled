@@ -153,8 +153,8 @@ typedef enum : NSUInteger {
 {
     NSIndexPath *indexPathAtPoint = nil;
     
-    for (int column = 0; column < _puzzleSize.numberOfColumns; column++) {
-        for (int row = 0; row < _puzzleSize.numberOfRows; row++) {
+    for (int row = 0; row < _puzzleSize.numberOfRows; row++) {
+        for (int column = 0; column < _puzzleSize.numberOfColumns; column++) {
             NSIndexPath *path = [NSIndexPath indexPathWithRow:row column:column];
             CGRect rectAtIndexPath = [self frameForCellAtIndexPath:path];
             if (CGRectContainsPoint(rectAtIndexPath, point)) {
@@ -333,6 +333,7 @@ typedef enum : NSUInteger {
         NSIndexPath *targetPath = [self pathDraggedCellCanSlide];
         if (targetPath) {
             [self animateCell:_draggedCell toPath:targetPath];
+            _emptyCell.frame = [self frameForCellAtIndexPath:_indexPathOfDraggedCell];
             PZPuzzleCellPlaceholder *placeholder = [_puzzleMatrix objectAtIndexPath:targetPath];
             NSAssert(placeholder.empty, @"Placeholeder not empty");
             [_puzzleMatrix swipeObjectAtIndexPath:targetPath withObjectAtIndexPath:_indexPathOfDraggedCell];
