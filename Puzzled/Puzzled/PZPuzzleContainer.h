@@ -13,6 +13,8 @@
 
 @protocol PZPuzzleContainerDataSorce <NSObject>
 
+@required
+- (CGSize)imageSizeForPuzzleContainer:(PZPuzzleContainer *)puzzleContainer;
 - (PuzzleSize)sizeForPuzzleContainer:(PZPuzzleContainer *)puzzleContainer;
 - (UIImage *)imageForCellAtIndexPath:(NSIndexPath *)index;
 - (NSIndexPath *)indexOfEmptyPuzzleForPuzzleContainer:(PZPuzzleContainer *)puzzleContainer;

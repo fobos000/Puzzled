@@ -58,14 +58,10 @@
 
 - (void)swipeObjectAtIndexPath:(NSIndexPath *)path1 withObjectAtIndexPath:(NSIndexPath *)path2
 {
-//    NSLog(@"%@", self);
-    
     id object1 = [self objectAtIndexPath:path1];
     id object2 = [self objectAtIndexPath:path2];
     [self replaceObjectAtIndexPath:path1 withObject:object2];
     [self replaceObjectAtIndexPath:path2 withObject:object1];
-    
-//    NSLog(@"%@", self);
 }
 
 - (NSIndexPath *)indexPathOfObject:(id)object
@@ -94,6 +90,19 @@
     }
     
     return description;
+}
+
+- (void)shuffle
+{
+    for (int row = 0; row < _size.numberOfRows; row++) {
+        for (int column = 0; column < _size.numberOfColumns; column++) {
+            int randRow = arc4random_uniform(_size.numberOfRows);
+            int randColumn = arc4random_uniform(_size.numberOfColumns);
+            NSIndexPath *randPath = [NSIndexPath indexPathWithRow:randRow column:randColumn];
+            NSIndexPath *path = [NSIndexPath indexPathWithRow:row column:column];
+            [self swipeObjectAtIndexPath:path withObjectAtIndexPath:randPath];
+        }
+    }
 }
 
 @end

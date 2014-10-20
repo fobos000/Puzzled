@@ -45,6 +45,7 @@ typedef enum : NSUInteger {
 
 @interface PZPuzzleContainer ()
 
+@property (nonatomic) UIView *puzzleView;
 @property (nonatomic) PuzzleSize puzzleSize;
 @property (nonatomic) CGSize cellSize;
 @property (nonatomic, strong) PZMatrix *puzzleMatrix;
@@ -69,6 +70,11 @@ typedef enum : NSUInteger {
         return;
     }
     
+    CGSize puzzleViewSize = [self.dataSource imageSizeForPuzzleContainer:self];
+    CGRect puzzleViewFrame = CGRectMake(0, 0, puzzleViewSize.width, puzzleViewSize.height);
+    _puzzleView = [[UIView alloc] initWithFrame:puzzleViewFrame];
+    [self addSubview:_puzzleView];
+    
     _puzzleSize = [self.dataSource sizeForPuzzleContainer:self];
     
     NSMutableArray *cells = [@[] mutableCopy];
@@ -86,7 +92,7 @@ typedef enum : NSUInteger {
             placeholder.cell = cellForIndex;
             
             [cells addObject:placeholder];
-            [self addSubview:cellForIndex];
+            [_puzzleView addSubview:cellForIndex];
         }
     }
     _puzzleMatrix = [[PZMatrix alloc] initWithSize:[self.dataSource sizeForPuzzleContainer:self]
@@ -96,6 +102,8 @@ typedef enum : NSUInteger {
     PZPuzzleCellPlaceholder *placeholder = [_puzzleMatrix objectAtIndexPath:emptyCellIndexPath];
     placeholder.empty = YES;
     _emptyCell = placeholder.cell;
+    
+    [_puzzleMatrix shuffle];
 }
 
 - (void)layoutSubviews
@@ -125,8 +133,8 @@ typedef enum : NSUInteger {
 - (CGSize)cellSize
 {
     if (CGSizeEqualToSize(_cellSize, CGSizeZero)) {
-        CGFloat cellWidth = self.frame.size.width / self.puzzleSize.numberOfColumns;
-        CGFloat cellHeight = self.frame.size.height / self.puzzleSize.numberOfRows;
+        CGFloat cellWidth = _puzzleView.frame.size.width / self.puzzleSize.numberOfColumns;
+        CGFloat cellHeight = _puzzleView.frame.size.height / self.puzzleSize.numberOfRows;
         _cellSize = CGSizeMake(cellWidth, cellHeight);
     }
     
@@ -184,7 +192,7 @@ typedef enum : NSUInteger {
     UITouch *touch = event.allTouches.anyObject;
     CGPoint touchLocation = [touch locationInView:self];
     
-    if (CGRectContainsPoint(self.frame, touchLocation)) {
+    if (CGRectContainsPoint(_puzzleView.frame, touchLocation)) {
         PZPuzzleCell *puzzleCell = [self puzzleCellAtPoint:touchLocation];
         _draggedCell = puzzleCell;
         _dX = touchLocation.x - puzzleCell.frame.origin.x;

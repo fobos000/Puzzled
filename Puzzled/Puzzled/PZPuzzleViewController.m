@@ -18,6 +18,7 @@
 
 @property (nonatomic, strong) PZMatrix *slicedImages;
 @property (nonatomic) PuzzleSize puzzleSize;
+@property (nonatomic) UIImage *selectedImage;
 @property (nonatomic) BOOL firstRun;
 
 @end
@@ -39,21 +40,21 @@
     // Do any additional setup after loading the view.
     _firstRun = YES;
     
-    PuzzleSize size = {6, 4};
-    self.puzzleSize = size;
-    self.slicedImages = [PZImageSlicer slicedImagesWithImage:[UIImage imageNamed:@"half-life"] size:self.puzzleSize];
-    
-    self.puzzleContainer.dataSource = self;
-    self.puzzleContainer.delegate = self;
+//    PuzzleSize size = {6, 4};
+//    self.puzzleSize = size;
+//    self.slicedImages = [PZImageSlicer slicedImagesWithImage:[UIImage imageNamed:@"half-life"] size:self.puzzleSize];
+//    
+//    self.puzzleContainer.dataSource = self;
+//    self.puzzleContainer.delegate = self;
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-//    if (_firstRun) {
-//        [self performSegueWithIdentifier:@"ImagePicker" sender:self];
-//        _firstRun = NO;
-//    }
+    if (_firstRun) {
+        [self performSegueWithIdentifier:@"ImagePicker" sender:self];
+        _firstRun = NO;
+    }
 }
 
 - (BOOL)prefersStatusBarHidden
@@ -79,6 +80,8 @@
 
 - (void)imagePicker:(PZImagePickerViewController *)picker didPickImage:(UIImage *)image
 {
+    self.selectedImage = image;
+    
     PuzzleSize size = {6, 4};
     self.puzzleSize = size;
     self.slicedImages = [PZImageSlicer slicedImagesWithImage:image size:self.puzzleSize];
@@ -89,6 +92,11 @@
 }
 
 #pragma mark -
+
+- (CGSize)imageSizeForPuzzleContainer:(PZPuzzleContainer *)puzzleContainer
+{
+    return self.selectedImage.size;
+}
 
 - (PuzzleSize)sizeForPuzzleContainer:(PZPuzzleContainer *)puzzleContainer
 {
