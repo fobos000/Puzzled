@@ -10,6 +10,7 @@
 #import "PZPuzzleCell.h"
 #import "NSIndexPath+RowColumn.h"
 #import "PZMatrix.h"
+#import "PZUtilities.h"
 
 @interface PZPuzzleCellPlaceholder : NSObject
 
@@ -70,11 +71,12 @@ typedef enum : NSUInteger {
         return;
     }
     
-    CGSize puzzleViewSize = [self.dataSource imageSizeForPuzzleContainer:self];
+    CGSize originalSize = [self.dataSource imageSizeForPuzzleContainer:self];
+    CGSize puzzleViewSize = [PZUtilities scaleSize:originalSize toFitInSize:self.frame.size];
     CGRect puzzleViewFrame = CGRectMake(0, 0, puzzleViewSize.width, puzzleViewSize.height);
     _puzzleView = [[UIView alloc] initWithFrame:puzzleViewFrame];
     [self addSubview:_puzzleView];
-    
+
     _puzzleSize = [self.dataSource sizeForPuzzleContainer:self];
     
     NSMutableArray *cells = [@[] mutableCopy];

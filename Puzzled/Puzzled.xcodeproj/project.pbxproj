@@ -13,6 +13,7 @@
 		7F96273B19A8A2EA002DBA98 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F96273A19A8A2EA002DBA98 /* Storyboard.storyboard */; };
 		7F96273E19A8A374002DBA98 /* PZPuzzleContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F96273D19A8A374002DBA98 /* PZPuzzleContainer.m */; };
 		7F96274119A908EB002DBA98 /* PZPuzzleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F96274019A908EB002DBA98 /* PZPuzzleCell.m */; };
+		7F98D5F019F6F78100C3EF1E /* PZUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F98D5EF19F6F78100C3EF1E /* PZUtilities.m */; };
 		7FB2449619E5C7C40074B9F4 /* PZImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FB2449519E5C7C40074B9F4 /* PZImagePickerViewController.m */; };
 		7FB2449919E5CDBC0074B9F4 /* NoStatusBarImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FB2449819E5CDBC0074B9F4 /* NoStatusBarImagePickerController.m */; };
 		7FFE368119BA529C00FBFB37 /* PZImageSlicer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FFE368019BA529C00FBFB37 /* PZImageSlicer.m */; };
@@ -52,6 +53,8 @@
 		7F96273D19A8A374002DBA98 /* PZPuzzleContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PZPuzzleContainer.m; sourceTree = "<group>"; };
 		7F96273F19A908EB002DBA98 /* PZPuzzleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PZPuzzleCell.h; sourceTree = "<group>"; };
 		7F96274019A908EB002DBA98 /* PZPuzzleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PZPuzzleCell.m; sourceTree = "<group>"; };
+		7F98D5EE19F6F78100C3EF1E /* PZUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PZUtilities.h; sourceTree = "<group>"; };
+		7F98D5EF19F6F78100C3EF1E /* PZUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PZUtilities.m; sourceTree = "<group>"; };
 		7FB2449419E5C7C40074B9F4 /* PZImagePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PZImagePickerViewController.h; sourceTree = "<group>"; };
 		7FB2449519E5C7C40074B9F4 /* PZImagePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PZImagePickerViewController.m; sourceTree = "<group>"; };
 		7FB2449719E5CDBC0074B9F4 /* NoStatusBarImagePickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoStatusBarImagePickerController.h; sourceTree = "<group>"; };
@@ -160,6 +163,8 @@
 				7FB2449519E5C7C40074B9F4 /* PZImagePickerViewController.m */,
 				7FB2449719E5CDBC0074B9F4 /* NoStatusBarImagePickerController.h */,
 				7FB2449819E5CDBC0074B9F4 /* NoStatusBarImagePickerController.m */,
+				7F98D5EE19F6F78100C3EF1E /* PZUtilities.h */,
+				7F98D5EF19F6F78100C3EF1E /* PZUtilities.m */,
 			);
 			path = Puzzled;
 			sourceTree = "<group>";
@@ -298,6 +303,7 @@
 				7F2DA85219AB8C6A00362828 /* NSIndexPath+RowColumn.m in Sources */,
 				7FB2449919E5CDBC0074B9F4 /* NoStatusBarImagePickerController.m in Sources */,
 				7FB2449619E5C7C40074B9F4 /* PZImagePickerViewController.m in Sources */,
+				7F98D5F019F6F78100C3EF1E /* PZUtilities.m in Sources */,
 				F63ACEF01918DE8F0046BAF9 /* PZAppDelegate.m in Sources */,
 				F63ACEEC1918DE8F0046BAF9 /* main.m in Sources */,
 			);
