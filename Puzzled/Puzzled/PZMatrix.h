@@ -17,6 +17,6 @@
 - (id)objectAtIndexPath:(NSIndexPath *)path;
 - (void)swipeObjectAtIndexPath:(NSIndexPath *)path1 withObjectAtIndexPath:(NSIndexPath *)path2;
 - (NSIndexPath *)indexPathOfObject:(id)object;
-- (void)shuffle;
+- (void)shuffleWithBlock:(void (^)(NSIndexPath *index1, NSIndexPath *index2))block;
 
 @end
