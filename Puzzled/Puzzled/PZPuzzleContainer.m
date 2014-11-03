@@ -12,29 +12,29 @@
 #import "PZMatrix.h"
 #import "PZUtilities.h"
 
-@interface PZPuzzleCellPlaceholder : NSObject
-
-@property (nonatomic, strong) PZPuzzleCell *cell;
-
-@property (nonatomic, strong) NSIndexPath *originalIndexPath;
-@property (nonatomic, strong) NSIndexPath *currentIndexPath;
-@property (nonatomic) BOOL empty;
-
-@end
-
-@implementation PZPuzzleCellPlaceholder
-
-- (void)setEmpty:(BOOL)empty
-{
-    if (empty) {
-        self.cell.alpha = 0.0f;
-    } else {
-        self.cell.alpha = 1.0f;
-    }
-    _empty = empty;
-}
-
-@end
+//@interface PZPuzzleCellPlaceholder : NSObject
+//
+//@property (nonatomic, strong) PZPuzzleCell *cell;
+//
+//@property (nonatomic, strong) NSIndexPath *originalIndexPath;
+//@property (nonatomic, strong) NSIndexPath *currentIndexPath;
+//@property (nonatomic) BOOL empty;
+//
+//@end
+//
+//@implementation PZPuzzleCellPlaceholder
+//
+//- (void)setEmpty:(BOOL)empty
+//{
+//    if (empty) {
+//        self.cell.alpha = 0.0f;
+//    } else {
+//        self.cell.alpha = 1.0f;
+//    }
+//    _empty = empty;
+//}
+//
+//@end
 
 typedef enum : NSUInteger {
     UndefinedMoveDirection,
@@ -72,6 +72,7 @@ typedef enum : NSUInteger {
         CGSize puzzleViewSize = [PZUtilities scaleSize:originalSize toFitInSize:self.frame.size];
         CGRect puzzleViewFrame = CGRectMake(0, 0, puzzleViewSize.width, puzzleViewSize.height);
         _puzzleView = [[UIView alloc] initWithFrame:puzzleViewFrame];
+        _puzzleView.center = self.center;
         [self addSubview:_puzzleView];
         
         _puzzleSize = [_dataSource sizeForPuzzleContainer:self];
@@ -85,12 +86,12 @@ typedef enum : NSUInteger {
                 PZPuzzleCell *cellForIndex = [[PZPuzzleCell alloc] init];
                 cellForIndex.image = image;
                 
-                PZPuzzleCellPlaceholder *placeholder = [[PZPuzzleCellPlaceholder alloc] init];
-                placeholder.originalIndexPath = path;
-                placeholder.currentIndexPath = path;
-                placeholder.cell = cellForIndex;
+//                PZPuzzleCellPlaceholder *placeholder = [[PZPuzzleCellPlaceholder alloc] init];
+//                placeholder.originalIndexPath = path;
+//                placeholder.currentIndexPath = path;
+//                placeholder.cell = cellForIndex;
                 
-                [cells addObject:placeholder];
+                [cells addObject:cellForIndex];
                 [_puzzleView addSubview:cellForIndex];
             }
         }
@@ -98,9 +99,9 @@ typedef enum : NSUInteger {
                                                objects:cells];
         
         NSIndexPath *emptyCellIndexPath = [_dataSource indexOfEmptyPuzzleForPuzzleContainer:self];
-        PZPuzzleCellPlaceholder *placeholder = [_puzzleMatrix objectAtIndexPath:emptyCellIndexPath];
-        placeholder.empty = YES;
-        _emptyCell = placeholder.cell;
+        PZPuzzleCell *emptyCell = [self cellAtIndexPath:emptyCellIndexPath];
+        emptyCell.isEmpty = YES;
+        _emptyCell = emptyCell;
         
         [self setNeedsLayout];
         [self layoutIfNeeded];
@@ -162,8 +163,9 @@ typedef enum : NSUInteger {
             NSIndexPath *cellPath = [NSIndexPath indexPathWithRow:cellRow column:cellColumn];
             CGPoint origin = [self originForCellAtIndexPath:cellPath];
             CGSize size = [self cellSize];
-            PZPuzzleCellPlaceholder *placeholder = [_puzzleMatrix objectAtIndexPath:cellPath];
-            PZPuzzleCell *cellAtIndex = placeholder.cell;
+//            PZPuzzleCellPlaceholder *placeholder = [_puzzleMatrix objectAtIndexPath:cellPath];
+//            PZPuzzleCell *cellAtIndex = placeholder.cell;
+            PZPuzzleCell *cellAtIndex = [self cellAtIndexPath:cellPath];
             cellAtIndex.frame = CGRectMake(origin.x, origin.y, size.width, size.height);
             cellIndex++;
         }
@@ -172,8 +174,7 @@ typedef enum : NSUInteger {
 
 - (PZPuzzleCell *)cellAtIndexPath:(NSIndexPath *)path
 {
-    PZPuzzleCellPlaceholder *placeholder = [_puzzleMatrix objectAtIndexPath:path];
-    return placeholder.cell;
+    return [_puzzleMatrix objectAtIndexPath:path];
 }
 
 - (CGSize)cellSize
@@ -220,15 +221,22 @@ typedef enum : NSUInteger {
     return indexPathAtPoint;
 }
 
+- (NSIndexPath *)indexPathOfCell:(PZPuzzleCell *)cell
+{
+//    return [self]
+    return [_puzzleMatrix indexPathOfObject:cell];
+}
+
 - (PZPuzzleCell *)puzzleCellAtPoint:(CGPoint)point
 {
-    PZPuzzleCell *cell = nil;
+    PZPuzzleCell *puzzleCellAtPoint = nil;
     
     NSIndexPath *path = [self indexPathAtPoint:point];
-    PZPuzzleCellPlaceholder *placeholder = [_puzzleMatrix objectAtIndexPath:path];
-    cell = placeholder.cell;
+//    PZPuzzleCellPlaceholder *placeholder = [_puzzleMatrix objectAtIndexPath:path];
+//    cell = placeholder.cell;
+    puzzleCellAtPoint = [self cellAtIndexPath:path];
     
-    return cell;
+    return puzzleCellAtPoint;
 }
 
 #pragma mark - 
@@ -236,7 +244,7 @@ typedef enum : NSUInteger {
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     UITouch *touch = event.allTouches.anyObject;
-    CGPoint touchLocation = [touch locationInView:self];
+    CGPoint touchLocation = [touch locationInView:_puzzleView];
     
     if (CGRectContainsPoint(_puzzleView.frame, touchLocation)) {
         PZPuzzleCell *puzzleCell = [self puzzleCellAtPoint:touchLocation];
@@ -246,7 +254,7 @@ typedef enum : NSUInteger {
         _initialTouch = touchLocation;
         _indexPathOfDraggedCell = [self indexPathAtPoint:touchLocation];
         
-        if ([self pathDraggedCellCanSlide]) {
+        if ([self pathCellAtIndexCanSlide:_indexPathOfDraggedCell]) {
             _movementRect = CGRectUnion(_draggedCell.frame, _emptyCell.frame);
         }
     }
@@ -254,33 +262,33 @@ typedef enum : NSUInteger {
 
 - (BOOL)isEmptyCellAtIndexPath:(NSIndexPath *)path
 {
-    PZPuzzleCellPlaceholder *placeholder = [_puzzleMatrix objectAtIndexPath:path];
-    return placeholder.empty;
+    PZPuzzleCell *cellAtIndex = [self cellAtIndexPath:path];
+    return cellAtIndex.isEmpty;
 }
 
-- (NSIndexPath *)pathDraggedCellCanSlide
+- (NSIndexPath *)pathCellAtIndexCanSlide:(NSIndexPath *)cellIndex
 {
-    NSIndexPath *ip = _indexPathOfDraggedCell;
+    NSIndexPath *ip = cellIndex;
     
-    if (_indexPathOfDraggedCell.row > 0) {
+    if (ip.row > 0) {
         NSIndexPath *path = [NSIndexPath indexPathWithRow:ip.row - 1 column:ip.column];
         if ([self isEmptyCellAtIndexPath:path]) {
             return path;
         }
     }
-    if (_indexPathOfDraggedCell.row < _puzzleMatrix.size.numberOfRows - 1) {
+    if (ip.row < _puzzleMatrix.size.numberOfRows - 1) {
         NSIndexPath *path = [NSIndexPath indexPathWithRow:ip.row + 1 column:ip.column];
         if ([self isEmptyCellAtIndexPath:path]) {
             return path;
         }
     }
-    if (_indexPathOfDraggedCell.column > 0) {
+    if (ip.column > 0) {
         NSIndexPath *path = [NSIndexPath indexPathWithRow:ip.row column:ip.column - 1];
         if ([self isEmptyCellAtIndexPath:path]) {
             return path;
         }
     }
-    if (_indexPathOfDraggedCell.column < _puzzleMatrix.size.numberOfColumns - 1) {
+    if (ip.column < _puzzleMatrix.size.numberOfColumns - 1) {
         NSIndexPath *path = [NSIndexPath indexPathWithRow:ip.row column:ip.column + 1];
         if ([self isEmptyCellAtIndexPath:path]) {
             return path;
@@ -293,8 +301,9 @@ typedef enum : NSUInteger {
 {
     BOOL canSlideToDirection = NO;
     
-    PZPuzzleCellPlaceholder *placeholder = [self placeholderAtDirection:direction];
-    if (placeholder.empty) {
+//    PZPuzzleCellPlaceholder *placeholder = [self placeholderAtDirection:direction];
+    PZPuzzleCell *cell = [self cellAtDirection:direction];
+    if (cell.isEmpty) {
         CGFloat maxX = CGRectGetMaxX(_draggedCell.frame);
         NSLog(@"%f", maxX);
         
@@ -306,9 +315,9 @@ typedef enum : NSUInteger {
     return canSlideToDirection;
 }
 
-- (PZPuzzleCellPlaceholder *)placeholderAtDirection:(MoveDirection)direction
+- (PZPuzzleCell *)cellAtDirection:(MoveDirection)direction
 {
-    PZPuzzleCellPlaceholder *placeholderAtDirection = nil;
+    PZPuzzleCell *cellAtDirection = nil;
     NSIndexPath *indexPathAtDirection = nil;
     switch (direction) {
         case LeftMoveDirection:
@@ -341,15 +350,57 @@ typedef enum : NSUInteger {
     }
     
     if (indexPathAtDirection) {
-        placeholderAtDirection = [_puzzleMatrix objectAtIndexPath:indexPathAtDirection];
+        cellAtDirection = [self cellAtIndexPath:indexPathAtDirection];
     }
-    return placeholderAtDirection;
+    return cellAtDirection;
+}
+
+- (NSArray *)slidableIndexPaths
+{
+    NSArray *slidableIndexPaths;
+    
+    NSIndexPath *emptyCellIndex = [self indexPathOfCell:_emptyCell];
+    
+    NSMutableArray *mutableSlidableIndexPaths = [@[] mutableCopy];
+    if (emptyCellIndex.column > 0) {
+        // Cell has left neighbor
+        NSIndexPath *leftNeighborPath = [NSIndexPath indexPathWithRow:emptyCellIndex.row
+                                                               column:emptyCellIndex.column - 1];
+        [mutableSlidableIndexPaths addObject:leftNeighborPath];
+    }
+    
+    if (emptyCellIndex.column < _puzzleMatrix.size.numberOfColumns - 1) {
+        // Cell has right neighbor
+        NSIndexPath *rightNeighborPath = [NSIndexPath indexPathWithRow:emptyCellIndex.row
+                                                                column:emptyCellIndex.column + 1];
+        [mutableSlidableIndexPaths addObject:rightNeighborPath];
+    }
+    
+    if (emptyCellIndex.row > 0) {
+        // Cell has top neighbor
+        NSIndexPath *topNeighborPath = [NSIndexPath indexPathWithRow:emptyCellIndex.row - 1
+                                                              column:emptyCellIndex.column];
+        [mutableSlidableIndexPaths addObject:topNeighborPath];
+    }
+    
+    if (emptyCellIndex.row < _puzzleMatrix.size.numberOfRows - 1) {
+        // Cell has bottom neighbor
+        NSIndexPath *bottomNeighborPath = [NSIndexPath indexPathWithRow:emptyCellIndex.row + 1
+                                                                column:emptyCellIndex.column];
+        [mutableSlidableIndexPaths addObject:bottomNeighborPath];
+    }
+    
+    if (mutableSlidableIndexPaths.count > 0) {
+        slidableIndexPaths = [NSArray arrayWithArray:mutableSlidableIndexPaths];
+    }
+    
+    return slidableIndexPaths;
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
     UITouch *touch = [[event allTouches] anyObject];
-    CGPoint touchLocation = [touch locationInView:self];
+    CGPoint touchLocation = [touch locationInView:_puzzleView];
     
     _dragging = YES;
     
@@ -374,22 +425,26 @@ typedef enum : NSUInteger {
     }
 }
 
-- (void)animateCell:(PZPuzzleCell *)cell toPath:(NSIndexPath *)path
+- (void)moveCell:(PZPuzzleCell *)cell toPath:(NSIndexPath *)path animated:(BOOL)animated
 {
-    [UIView animateWithDuration:0.1 animations:^{
+    if (animated) {
+        [UIView animateWithDuration:0.1 animations:^{
+            cell.frame = [self frameForCellAtIndexPath:path];
+        }];
+    } else {
         cell.frame = [self frameForCellAtIndexPath:path];
-    }];
+    }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if (!_dragging) {
-        NSIndexPath *targetPath = [self pathDraggedCellCanSlide];
+        NSIndexPath *targetPath = [self pathCellAtIndexCanSlide:_indexPathOfDraggedCell];
         if (targetPath) {
-            [self animateCell:_draggedCell toPath:targetPath];
+            [self moveCell:_draggedCell toPath:targetPath animated:YES];
             _emptyCell.frame = [self frameForCellAtIndexPath:_indexPathOfDraggedCell];
-            PZPuzzleCellPlaceholder *placeholder = [_puzzleMatrix objectAtIndexPath:targetPath];
-            NSAssert(placeholder.empty, @"Placeholeder not empty");
+            PZPuzzleCell *cell = [self cellAtIndexPath:targetPath];
+            NSAssert(cell.isEmpty, @"Placeholeder not empty");
             [_puzzleMatrix swipeObjectAtIndexPath:targetPath withObjectAtIndexPath:_indexPathOfDraggedCell];
         }
     } else {
@@ -409,6 +464,40 @@ typedef enum : NSUInteger {
 }
 
 #pragma mark - 
+
+- (void)makeShuffle
+{
+    PZPuzzleCell *previousCell;
+    for (int i = 0; i < _puzzleMatrix.size.numberOfRows * _puzzleMatrix.size.numberOfColumns; i++) {
+        // Get possible cell index paths to slide
+        NSArray *slidableIndexPaths = [self slidableIndexPaths];
+        
+        // Choose random puzzle to slide
+        int random = arc4random_uniform((u_int)slidableIndexPaths.count);
+        NSIndexPath *randomIndex = slidableIndexPaths[random];
+        PZPuzzleCell *randomPuzzleCell = [self cellAtIndexPath:randomIndex];
+        if (randomPuzzleCell == previousCell) {
+            random = (random > 0) ? (random - 1) : (random + 1);
+            randomIndex = slidableIndexPaths[random];
+            randomPuzzleCell = [self cellAtIndexPath:randomIndex];
+        }
+        
+        previousCell = randomPuzzleCell;
+        
+        // Slide random puzzle
+        NSIndexPath *emptyCellIndex = [self indexPathOfCell:_emptyCell];
+        [self moveCell:randomPuzzleCell toPath:emptyCellIndex animated:NO];
+        [self moveCell:_emptyCell toPath:randomIndex animated:NO];
+        [_puzzleMatrix swipeObjectAtIndexPath:randomIndex withObjectAtIndexPath:emptyCellIndex];
+        
+        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
+    }
+    
+//    [self setNeedsLayout];
+//    [self layoutIfNeeded];
+    
+    // Repeat
+}
 
 - (void)shuffle
 {

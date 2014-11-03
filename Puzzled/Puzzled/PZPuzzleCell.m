@@ -21,11 +21,10 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor yellowColor];
         _imageView = [[UIImageView alloc] init];
         [self addSubview:_imageView];
         self.layer.borderWidth = 1.0;
-        self.layer.borderColor = [UIColor blackColor].CGColor;
+        self.layer.borderColor = [UIColor whiteColor].CGColor;
     }
     return self;
 }
@@ -42,9 +41,16 @@
     _imageView.image = image;
 }
 
-//- (void)drawRect:(CGRect)rect
-//{
-//    
-//}
+- (void)setEmpty:(BOOL)isEmpty
+{
+    _isEmpty = isEmpty;
+    if (_isEmpty) {
+        _imageView.alpha = 0.0;
+        self.layer.borderWidth = 0.0;
+    } else {
+        _imageView.alpha = 1.0;
+        self.layer.borderWidth = 1.0;
+    }
+}
 
 @end

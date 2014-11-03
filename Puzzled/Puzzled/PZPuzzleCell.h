@@ -11,5 +11,6 @@
 @interface PZPuzzleCell : UIView
 
 @property (nonatomic, strong) UIImage *image;
+@property (nonatomic, setter=setEmpty:) BOOL isEmpty;
 
 @end

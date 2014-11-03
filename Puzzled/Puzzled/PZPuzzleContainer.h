@@ -30,6 +30,7 @@
 @property (nonatomic, weak) id<PZPuzzleContainerDataSorce> dataSource;
 @property (nonatomic, weak) id<PZPuzzleContainerDelegate> delegate;
 
+- (void)makeShuffle;
 - (void)shuffle;
 
 @end
