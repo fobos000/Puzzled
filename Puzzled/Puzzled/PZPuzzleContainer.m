@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Ostap Horbach. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
+
 #import "PZPuzzleContainer.h"
 #import "PZPuzzleCell.h"
 #import "NSIndexPath+RowColumn.h"
@@ -75,6 +77,7 @@ typedef enum : NSUInteger {
     CGSize puzzleViewSize = [PZUtilities scaleSize:originalSize toFitInSize:self.frame.size];
     CGRect puzzleViewFrame = CGRectMake(0, 0, puzzleViewSize.width, puzzleViewSize.height);
     _puzzleView = [[UIView alloc] initWithFrame:puzzleViewFrame];
+    _puzzleView.center = self.center;
     [self addSubview:_puzzleView];
 
     _puzzleSize = [self.dataSource sizeForPuzzleContainer:self];
@@ -104,8 +107,6 @@ typedef enum : NSUInteger {
     PZPuzzleCellPlaceholder *placeholder = [_puzzleMatrix objectAtIndexPath:emptyCellIndexPath];
     placeholder.empty = YES;
     _emptyCell = placeholder.cell;
-    
-    [_puzzleMatrix shuffle];
 }
 
 - (void)layoutSubviews
@@ -124,6 +125,18 @@ typedef enum : NSUInteger {
             cellIndex++;
         }
     }
+    
+//        for (PZPuzzleCell *cell in _puzzleView.subviews) {
+//            CABasicAnimation *width = [CABasicAnimation animationWithKeyPath:@"borderWidth"];
+//            // animate from 2pt to 4pt wide border ...
+//            width.fromValue = @0;
+//            width.toValue   = @1;
+//            width.duration = 0.3;
+//            // ... and change the model value
+//            cell.layer.borderWidth = 1;
+//            
+//            [cell.layer addAnimation:width forKey:@"color and width"];
+//        }
 }
 
 - (PZPuzzleCell *)cellAtIndexPath:(NSIndexPath *)path
@@ -187,26 +200,13 @@ typedef enum : NSUInteger {
     return cell;
 }
 
-#pragma mark - 
-
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)animateCell:(PZPuzzleCell *)cell toPath:(NSIndexPath *)path
 {
-    UITouch *touch = event.allTouches.anyObject;
-    CGPoint touchLocation = [touch locationInView:self];
-    
-    if (CGRectContainsPoint(_puzzleView.frame, touchLocation)) {
-        PZPuzzleCell *puzzleCell = [self puzzleCellAtPoint:touchLocation];
-        _draggedCell = puzzleCell;
-        _dX = touchLocation.x - puzzleCell.frame.origin.x;
-        _dY = touchLocation.y - puzzleCell.frame.origin.y;
-        _initialTouch = touchLocation;
-        _indexPathOfDraggedCell = [self indexPathAtPoint:touchLocation];
-        
-        if ([self pathDraggedCellCanSlide]) {
-            _movementRect = CGRectUnion(_draggedCell.frame, _emptyCell.frame);
-        }
-    }
+    [UIView animateWithDuration:0.1 animations:^{
+        cell.frame = [self frameForCellAtIndexPath:path];
+    }];
 }
+
 
 - (BOOL)isEmptyCellAtIndexPath:(NSIndexPath *)path
 {
@@ -302,10 +302,31 @@ typedef enum : NSUInteger {
     return placeholderAtDirection;
 }
 
+#pragma mark - 
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    UITouch *touch = event.allTouches.anyObject;
+    CGPoint touchLocation = [touch locationInView:_puzzleView];
+    
+    if (CGRectContainsPoint(_puzzleView.bounds, touchLocation)) {
+        PZPuzzleCell *puzzleCell = [self puzzleCellAtPoint:touchLocation];
+        _draggedCell = puzzleCell;
+        _dX = touchLocation.x - puzzleCell.frame.origin.x;
+        _dY = touchLocation.y - puzzleCell.frame.origin.y;
+        _initialTouch = touchLocation;
+        _indexPathOfDraggedCell = [self indexPathAtPoint:touchLocation];
+        
+        if ([self pathDraggedCellCanSlide]) {
+            _movementRect = CGRectUnion(_draggedCell.frame, _emptyCell.frame);
+        }
+    }
+}
+
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
     UITouch *touch = [[event allTouches] anyObject];
-    CGPoint touchLocation = [touch locationInView:self];
+    CGPoint touchLocation = [touch locationInView:_puzzleView];
     
     _dragging = YES;
     
@@ -328,13 +349,6 @@ typedef enum : NSUInteger {
         
         _draggedCell.frame = newFrame;
     }
-}
-
-- (void)animateCell:(PZPuzzleCell *)cell toPath:(NSIndexPath *)path
-{
-    [UIView animateWithDuration:0.1 animations:^{
-        cell.frame = [self frameForCellAtIndexPath:path];
-    }];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
@@ -362,6 +376,71 @@ typedef enum : NSUInteger {
     }
     
     _movementRect = CGRectZero;
+}
+
+- (void)shuffle
+{
+    NSMutableArray *animations = [@[] mutableCopy];
+    
+    [_puzzleMatrix shuffleWithBlock:^(NSIndexPath *index1, NSIndexPath *index2) {
+        PZPuzzleCell *cell1 = [self cellAtIndexPath:index1];
+        CGRect frame1 = [self frameForCellAtIndexPath:index1];
+        PZPuzzleCell *cell2 = [self cellAtIndexPath:index2];
+        CGRect frame2 = [self frameForCellAtIndexPath:index2];
+        
+        [animations addObject:^{
+            cell1.frame = frame1;
+            cell2.frame = frame2;
+        }];
+    }];
+    
+    __block NSMutableArray* animationBlocks = [NSMutableArray new];
+    typedef void(^animationBlock)(BOOL);
+    typedef void(^chainBlock)(void);
+    
+    // getNextAnimation
+    // removes the first block in the queue and returns it
+    animationBlock (^getNextAnimation)() = ^{
+        
+        if ([animationBlocks count] > 0){
+            animationBlock block = (animationBlock)[animationBlocks objectAtIndex:0];
+            [animationBlocks removeObjectAtIndex:0];
+            return block;
+        } else {
+            return ^(BOOL finished){
+                animationBlocks = nil;
+            };
+        }
+    };
+    
+    for (chainBlock block in animations) {
+        [animationBlocks addObject:^(BOOL finished){
+            [UIView animateWithDuration:1.0
+                                  delay:0.0
+                                options:UIViewAnimationOptionCurveLinear
+                             animations:block
+                             completion:getNextAnimation()];
+        }];
+    }
+    
+    // execute the first block in the queue
+    getNextAnimation()(YES);
+}
+
+- (void)animateSwipeIndex1:(NSIndexPath *)index1 index2:(NSIndexPath *)index2
+{
+    PZPuzzleCell *cell1 = [self cellAtIndexPath:index1];
+    CGRect frame1 = [self frameForCellAtIndexPath:index2];
+    PZPuzzleCell *cell2 = [self cellAtIndexPath:index2];
+    CGRect frame2 = [self frameForCellAtIndexPath:index1];
+    
+    __block BOOL completed = NO;
+    [UIView animateWithDuration:0.1 animations:^{
+        cell1.frame = frame1;
+        cell2.frame = frame2;
+    } completion:^(BOOL finished) {
+        completed = finished;
+    }];
 }
 
 @end

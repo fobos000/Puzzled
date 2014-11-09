@@ -24,8 +24,8 @@
         self.backgroundColor = [UIColor yellowColor];
         _imageView = [[UIImageView alloc] init];
         [self addSubview:_imageView];
-        self.layer.borderWidth = 1.0;
-        self.layer.borderColor = [UIColor blackColor].CGColor;
+//        self.layer.borderWidth = 2.0;
+        self.layer.borderColor = [UIColor whiteColor].CGColor;
     }
     return self;
 }

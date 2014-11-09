@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "PZPuzzleSize.h"
 
+typedef void (^ShuffleBlock)(NSIndexPath *index1, NSIndexPath *index2);
+
 @interface PZMatrix : NSObject
 
 @property (nonatomic, readonly) PuzzleSize size;
@@ -17,6 +19,6 @@
 - (id)objectAtIndexPath:(NSIndexPath *)path;
 - (void)swipeObjectAtIndexPath:(NSIndexPath *)path1 withObjectAtIndexPath:(NSIndexPath *)path2;
 - (NSIndexPath *)indexPathOfObject:(id)object;
-- (void)shuffle;
+- (void)shuffleWithBlock:(ShuffleBlock)block;
 
 @end

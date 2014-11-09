@@ -92,7 +92,7 @@
     return description;
 }
 
-- (void)shuffle
+- (void)shuffleWithBlock:(ShuffleBlock)block
 {
     for (int row = 0; row < _size.numberOfRows; row++) {
         for (int column = 0; column < _size.numberOfColumns; column++) {
@@ -101,6 +101,9 @@
             NSIndexPath *randPath = [NSIndexPath indexPathWithRow:randRow column:randColumn];
             NSIndexPath *path = [NSIndexPath indexPathWithRow:row column:column];
             [self swipeObjectAtIndexPath:path withObjectAtIndexPath:randPath];
+            if (block) {
+                 block(path, randPath);
+            }
         }
     }
 }
