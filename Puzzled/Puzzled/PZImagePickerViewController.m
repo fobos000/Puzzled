@@ -60,12 +60,12 @@
     
     UIImage *chosenImage = info[UIImagePickerControllerOriginalImage];
     
-    if ([self.delegate respondsToSelector:@selector(imagePicker:didPickImage:)]) {
-        [self.delegate imagePicker:self didPickImage:chosenImage];
-    }
-    
     [self dismissViewControllerAnimated:YES completion:^{
-        [self dismissViewControllerAnimated:YES completion:nil];
+        [self dismissViewControllerAnimated:YES completion:^{
+            if ([self.delegate respondsToSelector:@selector(imagePicker:didPickImage:)]) {
+                [self.delegate imagePicker:self didPickImage:chosenImage];
+            }
+        }];
     }];
 }
 

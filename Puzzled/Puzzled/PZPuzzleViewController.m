@@ -47,6 +47,8 @@
     
     self.puzzleContainer.dataSource = self;
     self.puzzleContainer.delegate = self;
+    
+//    [self.puzzleContainer shuffle];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -55,7 +57,11 @@
 //    if (_firstRun) {
 //        [self performSegueWithIdentifier:@"ImagePicker" sender:self];
 //        _firstRun = NO;
+//    } else {
+//        [self.puzzleContainer shuffle];
 //    }
+    
+    [self.puzzleContainer makeShuffle];
 }
 
 - (BOOL)prefersStatusBarHidden
@@ -81,15 +87,9 @@
 
 - (void)imagePicker:(PZImagePickerViewController *)picker didPickImage:(UIImage *)image
 {
-    self.selectedImage = image;
+//    self.selectedImage = image;
     
-    PuzzleSize size = {6, 4};
-    self.puzzleSize = size;
-    self.slicedImages = [PZImageSlicer slicedImagesWithImage:image size:self.puzzleSize];
-    
-    self.puzzleContainer.dataSource = self;
-    self.puzzleContainer.delegate = self;
-    
+//    [self.puzzleContainer shuffle];
 }
 
 #pragma mark -
