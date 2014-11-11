@@ -100,7 +100,7 @@ typedef enum : NSUInteger {
         
         NSIndexPath *emptyCellIndexPath = [_dataSource indexOfEmptyPuzzleForPuzzleContainer:self];
         PZPuzzleCell *emptyCell = [self cellAtIndexPath:emptyCellIndexPath];
-        emptyCell.isEmpty = YES;
+//        emptyCell.isEmpty = YES;
         _emptyCell = emptyCell;
         
         [self setNeedsLayout];
@@ -232,25 +232,24 @@ typedef enum : NSUInteger {
     PZPuzzleCell *puzzleCellAtPoint = nil;
     
     NSIndexPath *path = [self indexPathAtPoint:point];
-//    PZPuzzleCellPlaceholder *placeholder = [_puzzleMatrix objectAtIndexPath:path];
-//    cell = placeholder.cell;
     puzzleCellAtPoint = [self cellAtIndexPath:path];
     
     return puzzleCellAtPoint;
 }
 
 - (void)animateCell:(PZPuzzleCell *)cell toPath:(NSIndexPath *)path
-#pragma mark - 
-
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     [UIView animateWithDuration:0.1 animations:^{
         cell.frame = [self frameForCellAtIndexPath:path];
     }];
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
     UITouch *touch = event.allTouches.anyObject;
     CGPoint touchLocation = [touch locationInView:_puzzleView];
     
-    if (CGRectContainsPoint(_puzzleView.frame, touchLocation)) {
+    if (CGRectContainsPoint(_puzzleView.bounds, touchLocation)) {
         PZPuzzleCell *puzzleCell = [self puzzleCellAtPoint:touchLocation];
         _draggedCell = puzzleCell;
         _dX = touchLocation.x - puzzleCell.frame.origin.x;
@@ -304,8 +303,6 @@ typedef enum : NSUInteger {
 - (BOOL)canSlideToDirection:(MoveDirection)direction
 {
     BOOL canSlideToDirection = NO;
-    
-//    PZPuzzleCellPlaceholder *placeholder = [self placeholderAtDirection:direction];
     PZPuzzleCell *cell = [self cellAtDirection:direction];
     if (cell.isEmpty) {
         CGFloat maxX = CGRectGetMaxX(_draggedCell.frame);
@@ -516,28 +513,24 @@ typedef enum : NSUInteger {
     getNextAnimation()(YES);
 }
 
-- (void)animateSwipeIndex1:(NSIndexPath *)index1 index2:(NSIndexPath *)index2
-{
-    PZPuzzleCell *cell1 = [self cellAtIndexPath:index1];
-    CGRect frame1 = [self frameForCellAtIndexPath:index2];
-    PZPuzzleCell *cell2 = [self cellAtIndexPath:index2];
-    CGRect frame2 = [self frameForCellAtIndexPath:index1];
-    
-    __block BOOL completed = NO;
-    [UIView animateWithDuration:0.1 animations:^{
-        cell1.frame = frame1;
-        cell2.frame = frame2;
-    } completion:^(BOOL finished) {
-        completed = finished;
-    }];
-}
-
 #pragma mark - 
 
 - (void)makeShuffle
 {
+    //Disable user interacion during shuffling
+    self.userInteractionEnabled = NO;
+    
+    NSMutableArray *animations = [@[] mutableCopy];
+    [animations addObject:^{
+        [_puzzleMatrix enumerateObjectsUsingBlock:^(id obj, NSUInteger row, NSUInteger column, BOOL *stop) {
+            PZPuzzleCell *cell = obj;
+            cell.bordersEnabled = YES;
+        }];
+        _emptyCell.isEmpty = YES;
+    }];
+    
     PZPuzzleCell *previousCell;
-    for (int i = 0; i < _puzzleMatrix.size.numberOfRows * _puzzleMatrix.size.numberOfColumns; i++) {
+    for (int i = 0; i < _puzzleMatrix.size.numberOfRows * _puzzleMatrix.size.numberOfColumns * 2; i++) {
         // Get possible cell index paths to slide
         NSArray *slidableIndexPaths = [self slidableIndexPaths];
         
@@ -555,39 +548,51 @@ typedef enum : NSUInteger {
         
         // Slide random puzzle
         NSIndexPath *emptyCellIndex = [self indexPathOfCell:_emptyCell];
-        [self moveCell:randomPuzzleCell toPath:emptyCellIndex animated:NO];
-        [self moveCell:_emptyCell toPath:randomIndex animated:NO];
         [_puzzleMatrix swipeObjectAtIndexPath:randomIndex withObjectAtIndexPath:emptyCellIndex];
         
-        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
+        [animations addObject:^{
+            CGRect emptyCellFrame = _emptyCell.frame;
+            _emptyCell.frame = randomPuzzleCell.frame;
+            randomPuzzleCell.frame = emptyCellFrame;
+        }];
     }
     
-//    [self setNeedsLayout];
-//    [self layoutIfNeeded];
-    
-    // Repeat
-}
-
-- (void)shuffle
-{
-    [_puzzleMatrix shuffleWithBlock:^(NSIndexPath *index1, NSIndexPath *index2) {
-        CGRect frame1 = [self frameForCellAtIndexPath:index1];
-        CGRect frame2 = [self frameForCellAtIndexPath:index2];
-        PZPuzzleCell *cell1 = [self cellAtIndexPath:index1];
-        PZPuzzleCell *cell2 = [self cellAtIndexPath:index2];
-        
-        __block BOOL completed = NO;
-        [UIView animateWithDuration:.2 animations:^{
-            cell1.frame = frame1;
-            cell2.frame = frame2;
-        } completion:^(BOOL finished) {
-            completed = YES;
-        }];
-        
-        while (!completed) {
-            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.1]];
-        }
+    [animations addObject:^{
+        // Restore user interaction at the end of all animations
+        self.userInteractionEnabled = YES;
     }];
+    
+    __block NSMutableArray* animationBlocks = [NSMutableArray new];
+    typedef void(^animationBlock)(BOOL);
+    typedef void(^chainBlock)(void);
+    
+    // getNextAnimation
+    // removes the first block in the queue and returns it
+    animationBlock (^getNextAnimation)() = ^{
+        
+        if ([animationBlocks count] > 0){
+            animationBlock block = (animationBlock)[animationBlocks objectAtIndex:0];
+            [animationBlocks removeObjectAtIndex:0];
+            return block;
+        } else {
+            return ^(BOOL finished){
+                animationBlocks = nil;
+            };
+        }
+    };
+    
+    for (chainBlock block in animations) {
+        [animationBlocks addObject:^(BOOL finished){
+            [UIView animateWithDuration:0.1
+                                  delay:0.0
+                                options:UIViewAnimationOptionCurveLinear
+                             animations:block
+                             completion:getNextAnimation()];
+        }];
+    }
+    
+    // execute the first block in the queue
+    getNextAnimation()(YES);
 }
 
 @end

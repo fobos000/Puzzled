@@ -20,5 +20,9 @@ typedef void (^ShuffleBlock)(NSIndexPath *index1, NSIndexPath *index2);
 - (void)swipeObjectAtIndexPath:(NSIndexPath *)path1 withObjectAtIndexPath:(NSIndexPath *)path2;
 - (NSIndexPath *)indexPathOfObject:(id)object;
 - (void)shuffleWithBlock:(ShuffleBlock)block;
+- (void)enumerateObjectsUsingBlock:(void (^)(id obj,
+                                             NSUInteger row,
+                                             NSUInteger column,
+                                             BOOL *stop))block;
 
 @end

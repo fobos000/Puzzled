@@ -12,6 +12,7 @@
 @interface PZPuzzleCell ()
 
 @property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) UIView *borderView;
 
 @end
 
@@ -23,8 +24,10 @@
     if (self) {
         _imageView = [[UIImageView alloc] init];
         [self addSubview:_imageView];
-        self.layer.borderWidth = 1.0;
-        self.layer.borderColor = [UIColor whiteColor].CGColor;
+        _borderView = [[UIView alloc] init];
+        _borderView.layer.borderWidth = 1.0;
+        _borderView.layer.borderColor = [UIColor whiteColor].CGColor;
+        [self addSubview:_borderView];
     }
     return self;
 }
@@ -34,11 +37,22 @@
     [super setFrame:frame];
     
     _imageView.frame = CGRectMake(0, 0, CGRectGetWidth(frame), CGRectGetHeight(frame));
+    _borderView.frame = CGRectMake(0, 0, CGRectGetWidth(frame), CGRectGetHeight(frame));
 }
 
 - (void)setImage:(UIImage *)image
 {
     _imageView.image = image;
+}
+
+- (void)setBordersEnabled:(BOOL)bordersEnabled
+{
+    _bordersEnabled = bordersEnabled;
+    if (_bordersEnabled) {
+        _borderView.alpha = 1.0;
+    } else {
+        _borderView.alpha = 0.0;
+    }
 }
 
 - (void)setEmpty:(BOOL)isEmpty

@@ -40,13 +40,13 @@
     // Do any additional setup after loading the view.
     _firstRun = YES;
     
-    PuzzleSize size = {6, 4};
-    self.puzzleSize = size;
-    self.slicedImages = [PZImageSlicer slicedImagesWithImage:[UIImage imageNamed:@"half-life"] size:self.puzzleSize];
-    self.selectedImage = [UIImage imageNamed:@"half-life"];
-    
-    self.puzzleContainer.dataSource = self;
-    self.puzzleContainer.delegate = self;
+//    PuzzleSize size = {6, 4};
+//    self.puzzleSize = size;
+//    self.slicedImages = [PZImageSlicer slicedImagesWithImage:[UIImage imageNamed:@"half-life"] size:self.puzzleSize];
+//    self.selectedImage = [UIImage imageNamed:@"half-life"];
+//    
+//    self.puzzleContainer.dataSource = self;
+//    self.puzzleContainer.delegate = self;
     
 //    [self.puzzleContainer shuffle];
 }
@@ -54,14 +54,14 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-//    if (_firstRun) {
-//        [self performSegueWithIdentifier:@"ImagePicker" sender:self];
-//        _firstRun = NO;
-//    } else {
-//        [self.puzzleContainer shuffle];
-//    }
+    if (_firstRun) {
+        [self performSegueWithIdentifier:@"ImagePicker" sender:self];
+        _firstRun = NO;
+    } else {
+//        [self.puzzleContainer makeShuffle];
+    }
     
-    [self.puzzleContainer makeShuffle];
+//    [self.puzzleContainer makeShuffle];
 }
 
 - (BOOL)prefersStatusBarHidden
@@ -87,9 +87,19 @@
 
 - (void)imagePicker:(PZImagePickerViewController *)picker didPickImage:(UIImage *)image
 {
-//    self.selectedImage = image;
+    self.selectedImage = image;
     
 //    [self.puzzleContainer shuffle];
+    
+    PuzzleSize size = {6, 4};
+    self.puzzleSize = size;
+    self.slicedImages = [PZImageSlicer slicedImagesWithImage:image size:self.puzzleSize];
+    self.selectedImage = image;
+    
+    self.puzzleContainer.dataSource = self;
+    self.puzzleContainer.delegate = self;
+    
+    [self.puzzleContainer makeShuffle];
 }
 
 #pragma mark -

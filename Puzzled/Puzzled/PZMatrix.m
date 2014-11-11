@@ -108,4 +108,22 @@
     }
 }
 
+- (void)enumerateObjectsUsingBlock:(void (^)(id obj,
+                                             NSUInteger row,
+                                             NSUInteger column,
+                                             BOOL *stop))block
+{
+    BOOL stop = NO;
+    for (int row = 0; row < _size.numberOfRows; row++) {
+        for (int column = 0; column < _size.numberOfColumns; column++) {
+            if (stop == YES) {
+                break;
+            }
+            if (block) {
+                block(_cells[row][column], row, column, &stop);
+            }
+        }
+    }
+}
+
 @end

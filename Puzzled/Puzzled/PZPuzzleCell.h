@@ -12,5 +12,6 @@
 
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic, setter=setEmpty:) BOOL isEmpty;
+@property (nonatomic) BOOL bordersEnabled;
 
 @end
