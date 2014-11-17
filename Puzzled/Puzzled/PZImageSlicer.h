@@ -13,6 +13,8 @@
 
 @interface PZImageSlicer : NSObject
 
-+ (PZMatrix *)slicedImagesWithImage:(UIImage *)image size:(PuzzleSize)size;
++ (PZMatrix *)slicedImagesWithImage:(UIImage *)image
+                         puzzleSize:(PuzzleSize)puzzleSize
+                          imageSize:(CGSize)imageSize;
 
 @end

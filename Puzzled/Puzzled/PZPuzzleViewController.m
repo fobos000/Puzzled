@@ -62,7 +62,9 @@
     } else {
         PuzzleSize size = {6, 4};
         self.puzzleSize = size;
-        self.slicedImages = [PZImageSlicer slicedImagesWithImage:self.selectedImage size:self.puzzleSize];
+        self.slicedImages = [PZImageSlicer slicedImagesWithImage:self.selectedImage
+                                                      puzzleSize:self.puzzleSize
+                                                       imageSize:self.puzzleContainer.bounds.size];
         
         self.puzzleContainer.dataSource = self;
         self.puzzleContainer.delegate = self;

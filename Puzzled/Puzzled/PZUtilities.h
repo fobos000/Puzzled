@@ -11,5 +11,7 @@
 @interface PZUtilities : NSObject
 
 + (CGSize)scaleSize:(CGSize)size toFitInSize:(CGSize)size;
++ (UIImage*)imageWithImage:(UIImage*)image
+              scaledToSize:(CGSize)newSize;
 
 @end

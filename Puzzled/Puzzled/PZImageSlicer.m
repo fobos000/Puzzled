@@ -8,25 +8,31 @@
 
 #import "PZImageSlicer.h"
 #import "PZMatrix.h"
+#import "PZUtilities.h"
 
 @implementation PZImageSlicer
 
-+ (PZMatrix *)slicedImagesWithImage:(UIImage *)image size:(PuzzleSize)size
++ (PZMatrix *)slicedImagesWithImage:(UIImage *)image
+                               puzzleSize:(PuzzleSize)puzzleSize
+                          imageSize:(CGSize)imageSize
 {
+    CGSize newSize = [PZUtilities scaleSize:image.size toFitInSize:imageSize];
+    UIImage *scaledImage = [PZUtilities imageWithImage:image scaledToSize:newSize];
+    
     NSMutableArray *slicedImageArray = [NSMutableArray array];
     
-    CGFloat sliceWidth = image.size.width / size.numberOfColumns;
-    CGFloat sliceHeight = image.size.height / size.numberOfRows;
+    CGFloat sliceWidth = scaledImage.size.width / puzzleSize.numberOfColumns;
+    CGFloat sliceHeight = scaledImage.size.height / puzzleSize.numberOfRows;
     
-    for (int row = 0; row < size.numberOfRows; row++) {
-        for (int column = 0; column < size.numberOfColumns; column++) {
+    for (int row = 0; row < puzzleSize.numberOfRows; row++) {
+        for (int column = 0; column < puzzleSize.numberOfColumns; column++) {
             CGRect rect = CGRectMake(column * sliceWidth, row * sliceHeight, sliceWidth, sliceHeight);
-            UIImage *slice = [self imageWithImage:image cropInRect:rect];
+            UIImage *slice = [self imageWithImage:scaledImage cropInRect:rect];
             [slicedImageArray addObject:slice];
         }
     }
     
-    PZMatrix *slicedImageMatrix = [[PZMatrix alloc] initWithSize:size objects:slicedImageArray];
+    PZMatrix *slicedImageMatrix = [[PZMatrix alloc] initWithSize:puzzleSize objects:slicedImageArray];
     return slicedImageMatrix;
 }
 
