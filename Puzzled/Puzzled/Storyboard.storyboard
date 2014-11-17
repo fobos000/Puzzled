@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="u6o-OY-O2a">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="u6o-OY-O2a">
     <dependencies>
         <deployment defaultVersion="1808" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
@@ -21,16 +21,52 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </view>
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="50L-rC-Hxc">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pm9-fw-g0W">
+                                <rect key="frame" x="137" y="530" width="46" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="46" id="JJL-7J-zgC"/>
+                                    <constraint firstAttribute="height" constant="30" id="sdV-rV-hLt"/>
+                                </constraints>
+                                <state key="normal" title="Hint">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="hintTouchDown:" destination="u6o-OY-O2a" eventType="touchDown" id="Wd6-gL-j6i"/>
+                                    <action selector="hintTouchUp:" destination="u6o-OY-O2a" eventType="touchUpOutside" id="H3G-d5-18y"/>
+                                    <action selector="hintTouchUp:" destination="u6o-OY-O2a" eventType="touchUpInside" id="kDo-n4-7h3"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xXq-dc-AWN">
+                                <rect key="frame" x="110" y="28" width="100" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="2Jj-pu-3v6"/>
+                                    <constraint firstAttribute="width" constant="100" id="doF-KZ-chu"/>
+                                </constraints>
+                                <state key="normal" title="Change image">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="changeImage:" destination="u6o-OY-O2a" eventType="touchUpInside" id="Cb1-FJ-q4I"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="xXq-dc-AWN" firstAttribute="top" secondItem="UFV-SO-cOh" secondAttribute="bottom" constant="8" id="5RU-KW-xUf"/>
                             <constraint firstAttribute="trailing" secondItem="zPb-zm-n2R" secondAttribute="trailing" id="FAT-Dp-JOf"/>
                             <constraint firstItem="zPb-zm-n2R" firstAttribute="leading" secondItem="dWb-sJ-ZSF" secondAttribute="leading" id="TsH-lp-aop"/>
                             <constraint firstItem="SIn-CH-Twu" firstAttribute="top" secondItem="zPb-zm-n2R" secondAttribute="bottom" id="Vll-Lp-oDE"/>
+                            <constraint firstAttribute="centerX" secondItem="pm9-fw-g0W" secondAttribute="centerX" id="hi3-aT-Zjm"/>
                             <constraint firstItem="zPb-zm-n2R" firstAttribute="top" secondItem="dWb-sJ-ZSF" secondAttribute="top" id="rCq-xw-wrP"/>
+                            <constraint firstItem="SIn-CH-Twu" firstAttribute="top" secondItem="pm9-fw-g0W" secondAttribute="bottom" constant="8" id="y0e-vY-KSY"/>
+                            <constraint firstAttribute="centerX" secondItem="xXq-dc-AWN" secondAttribute="centerX" id="ynJ-gh-e3s"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="originalImageView" destination="50L-rC-Hxc" id="htG-72-Ddc"/>
                         <outlet property="puzzleContainer" destination="zPb-zm-n2R" id="Rm4-Rp-SFe"/>
                         <segue destination="3Yg-sk-goL" kind="modal" identifier="ImagePicker" id="Pte-Nm-k9V"/>
                     </connections>
@@ -51,17 +87,23 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yly-zh-ISh">
-                                <rect key="frame" x="112" y="189" width="96" height="30"/>
-                                <state key="normal" title="Teka a picture">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yly-zh-ISh">
+                                <rect key="frame" x="16" y="233" width="96" height="78"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="96" id="WZ7-9k-5hg"/>
+                                    <constraint firstAttribute="height" constant="78" id="oKX-wC-zYi"/>
+                                </constraints>
+                                <state key="normal" title="Take a picture"/>
                                 <connections>
                                     <action selector="takeAPicture:" destination="3Yg-sk-goL" eventType="touchUpInside" id="1lG-31-5ZW"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fqK-L6-hbC">
-                                <rect key="frame" x="105" y="232" width="111" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fqK-L6-hbC">
+                                <rect key="frame" x="193" y="233" width="111" height="78"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="78" id="BIb-lu-ca8"/>
+                                    <constraint firstAttribute="width" constant="111" id="QMl-c1-Qpu"/>
+                                </constraints>
                                 <state key="normal" title="Choose existing">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -71,6 +113,12 @@
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="fqK-L6-hbC" secondAttribute="centerX" constant="-88.5" id="Gma-aW-L0J"/>
+                            <constraint firstAttribute="centerX" secondItem="yly-zh-ISh" secondAttribute="centerX" constant="96" id="Gqv-mR-nB0"/>
+                            <constraint firstAttribute="centerY" secondItem="fqK-L6-hbC" secondAttribute="centerY" constant="12" id="UCv-j1-lTb"/>
+                            <constraint firstAttribute="centerY" secondItem="yly-zh-ISh" secondAttribute="centerY" constant="12" id="qtM-yd-o7I"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fbp-Dz-Xrk" userLabel="First Responder" sceneMemberID="firstResponder"/>

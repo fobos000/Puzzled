@@ -15,11 +15,13 @@
 
 @interface PZPuzzleViewController () <PZPuzzleContainerDataSorce, PZPuzzleContainerDelegate, PZImagePickerDelegate>
 @property (weak, nonatomic) IBOutlet PZPuzzleContainer *puzzleContainer;
+@property (weak, nonatomic) IBOutlet UIImageView *originalImageView;
 
 @property (nonatomic, strong) PZMatrix *slicedImages;
 @property (nonatomic) PuzzleSize puzzleSize;
 @property (nonatomic) UIImage *selectedImage;
 @property (nonatomic) BOOL firstRun;
+
 
 @end
 
@@ -58,7 +60,17 @@
         [self performSegueWithIdentifier:@"ImagePicker" sender:self];
         _firstRun = NO;
     } else {
-//        [self.puzzleContainer makeShuffle];
+        PuzzleSize size = {6, 4};
+        self.puzzleSize = size;
+        self.slicedImages = [PZImageSlicer slicedImagesWithImage:self.selectedImage size:self.puzzleSize];
+        
+        self.puzzleContainer.dataSource = self;
+        self.puzzleContainer.delegate = self;
+        
+        [self.puzzleContainer reloadData];
+        
+        self.originalImageView.hidden = YES;
+        [self.puzzleContainer makeShuffle];
     }
     
 //    [self.puzzleContainer makeShuffle];
@@ -88,18 +100,9 @@
 - (void)imagePicker:(PZImagePickerViewController *)picker didPickImage:(UIImage *)image
 {
     self.selectedImage = image;
+    self.originalImageView.image = image;
+    self.originalImageView.hidden = NO;
     
-//    [self.puzzleContainer shuffle];
-    
-    PuzzleSize size = {6, 4};
-    self.puzzleSize = size;
-    self.slicedImages = [PZImageSlicer slicedImagesWithImage:image size:self.puzzleSize];
-    self.selectedImage = image;
-    
-    self.puzzleContainer.dataSource = self;
-    self.puzzleContainer.delegate = self;
-    
-    [self.puzzleContainer makeShuffle];
 }
 
 #pragma mark -
@@ -123,5 +126,23 @@
 {
     return [NSIndexPath indexPathWithRow:_puzzleSize.numberOfRows - 1 column:_puzzleSize.numberOfColumns - 1];
 }
+
+#pragma mark - IBAction
+
+- (IBAction)hintTouchDown:(id)sender
+{
+    self.originalImageView.hidden = NO;
+}
+
+- (IBAction)hintTouchUp:(id)sender
+{
+    self.originalImageView.hidden = YES;
+}
+
+- (IBAction)changeImage:(id)sender
+{
+    [self performSegueWithIdentifier:@"ImagePicker" sender:self];
+}
+
 
 @end

@@ -46,7 +46,6 @@
 
 - (void)showImagePickerForSourceType:(UIImagePickerControllerSourceType)sourceType
 {
-    
     NoStatusBarImagePickerController *imagePickerController = [[NoStatusBarImagePickerController alloc] init];
     imagePickerController.modalPresentationStyle = UIModalPresentationFullScreen;
     imagePickerController.sourceType = sourceType;
@@ -59,12 +58,17 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     
     UIImage *chosenImage = info[UIImagePickerControllerOriginalImage];
+//    if ([self.delegate respondsToSelector:@selector(imagePicker:didPickImage:)]) {
+//        [self.delegate imagePicker:self didPickImage:chosenImage];
+//    }
+    
+    if ([self.delegate respondsToSelector:@selector(imagePicker:didPickImage:)]) {
+        [self.delegate imagePicker:self didPickImage:chosenImage];
+    }
     
     [self dismissViewControllerAnimated:YES completion:^{
         [self dismissViewControllerAnimated:YES completion:^{
-            if ([self.delegate respondsToSelector:@selector(imagePicker:didPickImage:)]) {
-                [self.delegate imagePicker:self didPickImage:chosenImage];
-            }
+            
         }];
     }];
 }

@@ -32,5 +32,6 @@
 
 - (void)makeShuffle;
 - (void)shuffle;
+- (void)reloadData;
 
 @end

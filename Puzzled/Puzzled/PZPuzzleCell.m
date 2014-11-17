@@ -58,13 +58,7 @@
 - (void)setEmpty:(BOOL)isEmpty
 {
     _isEmpty = isEmpty;
-    if (_isEmpty) {
-        _imageView.alpha = 0.0;
-        self.layer.borderWidth = 0.0;
-    } else {
-        _imageView.alpha = 1.0;
-        self.layer.borderWidth = 1.0;
-    }
+    self.hidden = isEmpty;
 }
 
 @end
